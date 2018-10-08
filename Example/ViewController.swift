@@ -39,12 +39,24 @@ class ViewController: UIViewController {
       return item.tabTitle()!
     }
 
-    let tabsView = TabsView.tabsViewFor(titles: titles, height: 60.0, delegate: nil)
+    let tabsView = TabsView.tabsViewFor(
+        titles: titles,
+        height: 48.0,
+        selectionIndicatorHeight: 2,
+        font: UIFont.systemFont(ofSize: 14, weight: .light),
+        textColor: UIColor.black,
+        selectedTabFont: UIFont.systemFont(ofSize: 14, weight: .semibold),
+        selectedTabColor: UIColor.red,
+        delegate: nil
+    )
+    tabsView.selectionIndicatorColor = UIColor.red
     let imgView = UIImageView(image: UIImage(named: "photo.jpg"));
     imgView.contentMode = .scaleAspectFill
     let parallex = ParallaxPagerView(
       containerViewController: self,
       headerView: imgView,
+      headerHeight: 300,
+      segmentMiniTopInset: self.navigationController?.navigationBar.frame.maxY ?? 84,
       tabsView: tabsView,
       viewControllers: viewControllers,
       delegate: self
