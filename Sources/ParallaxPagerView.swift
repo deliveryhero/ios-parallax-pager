@@ -31,8 +31,8 @@ public protocol ParallaxPagerViewDelegate {
 public final class ParallaxPagerView: UIView {
 
   private let tabsHeight: CGFloat
-  private let headerHeight: CGFloat = 300.0
-  private let segmentMiniTopInset: CGFloat = 84.0
+  private let headerHeight: CGFloat
+  private let segmentMiniTopInset: CGFloat
 
   private var originalTopInset: CGFloat = 0.0
 
@@ -66,6 +66,8 @@ public final class ParallaxPagerView: UIView {
   public init(
     containerViewController: UIViewController,
     headerView: UIView,
+    headerHeight: CGFloat,
+    segmentMiniTopInset: CGFloat,
     tabsView: (PagerTab & UIView)? = nil,
     viewControllers: [TabViewController],
     delegate: ParallaxPagerViewDelegate? = nil
@@ -73,6 +75,8 @@ public final class ParallaxPagerView: UIView {
     self.containerViewController = containerViewController
     self.headerView = headerView
     self.tabsView = tabsView
+    self.segmentMiniTopInset = segmentMiniTopInset
+    self.headerHeight = headerHeight
     self.tabsHeight = tabsView?.frame.size.height ?? 0.0
     self.viewControllers = viewControllers
     self.delegate = delegate
