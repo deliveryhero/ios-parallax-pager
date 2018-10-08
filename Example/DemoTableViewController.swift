@@ -54,21 +54,14 @@ class DemoTableViewController: UITableViewController {
   }
 }
 
-extension DemoTableViewController: ContentViewController {
-  func tabTitle() -> String? {
-    return "Table with \(numberOfCells) Celss"
-  }
-
-  func tabView() -> UIView? {
-    return nil
-  }
-
+extension DemoTableViewController: ParallaxContentViewController {
+  
   func scrollableView() -> UIScrollView? {
     return self.tableView
   }
 }
 
-class NoScrollViewController: UIViewController, ContentViewController {
+class NoScrollViewController: UIViewController, ParallaxContentViewController {
   func tabTitle() -> String? {
     return "No scroll view controller"
   }

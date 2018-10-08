@@ -19,6 +19,8 @@
 		E23C7FE3215D3C33005F2545 /* ParallaxPagerView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* ParallaxPagerView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E23C7FE8215D3E0B005F2545 /* photo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E23C7FE7215D3E0B005F2545 /* photo.jpg */; };
 		E23C7FEA215D41D9005F2545 /* ParallaxPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23C7FE9215D41D9005F2545 /* ParallaxPagerView.swift */; };
+		E2E306F7216BB0780025897F /* TabsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E306F6216BB0780025897F /* TabsConfig.swift */; };
+		E2E306F9216BF0200025897F /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E306F8216BF0200025897F /* Protocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,8 @@
 		E23C7FDB215D3B0B005F2545 /* DemoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTableViewController.swift; sourceTree = "<group>"; };
 		E23C7FE7215D3E0B005F2545 /* photo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = photo.jpg; sourceTree = "<group>"; };
 		E23C7FE9215D41D9005F2545 /* ParallaxPagerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParallaxPagerView.swift; sourceTree = "<group>"; };
+		E2E306F6216BB0780025897F /* TabsConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsConfig.swift; sourceTree = "<group>"; };
+		E2E306F8216BF0200025897F /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +108,8 @@
 			children = (
 				AD2FAA261CD0B6D800659CF4 /* ParallaxPagerView.plist */,
 				E23C7FE9215D41D9005F2545 /* ParallaxPagerView.swift */,
+				E2E306F8216BF0200025897F /* Protocols.swift */,
+				E2E306F6216BB0780025897F /* TabsConfig.swift */,
 				E23C7FBF215D39C3005F2545 /* Tabs */,
 			);
 			path = Sources;
@@ -190,12 +196,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Foodora;
 				TargetAttributes = {
 					52D6D97B1BEFF229002C0205 = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1000;
 					};
 					E23C7FC8215D3A96005F2545 = {
 						CreatedOnToolsVersion = 10.0;
@@ -250,7 +256,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E23C7FC3215D39C3005F2545 /* TabsView.swift in Sources */,
+				E2E306F7216BB0780025897F /* TabsConfig.swift in Sources */,
 				E23C7FEA215D41D9005F2545 /* ParallaxPagerView.swift in Sources */,
+				E2E306F9216BF0200025897F /* Protocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,12 +314,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -363,12 +373,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -421,7 +433,7 @@
 				PRODUCT_NAME = ParallaxPagerView;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -444,7 +456,7 @@
 				PRODUCT_NAME = ParallaxPagerView;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

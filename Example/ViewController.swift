@@ -35,25 +35,41 @@ class ViewController: UIViewController {
     let viewController6 = storyboard.instantiateViewController(withIdentifier: "NoScrollVC") as! NoScrollViewController
 
     let viewControllers: [TabViewController] = [viewController1, viewController2, viewController3, viewController4, viewController5, viewController6]
-    let titles = viewControllers.map { (item) -> String in
-      return item.tabTitle()!
-    }
+    let titles = ["View 1", "View 2", "View 3", "View 4", "View 5", "View 6"]
 
-    let tabsView = TabsView.tabsViewFor(titles: titles, height: 60.0, delegate: nil)
+    let tabsConfig = TabsConfig(
+      titles: titles,
+      height: 50.0,
+      tabsPadding: 16.0,
+      tabsShouldBeCentered: false,
+      defaultTabTitleColor: .black,
+      selectedTabTitleColor: .black,
+      defaultTabTitleFont: UIFont.systemFont(ofSize: 15.0),
+      selectedTabTitleFont: UIFont.boldSystemFont(ofSize: 15.0),
+      selectionIndicatorHeight: 2.0,
+      selectionIndicatorColor: .blue
+    )
+
     let imgView = UIImageView(image: UIImage(named: "photo.jpg"));
     imgView.contentMode = .scaleAspectFill
-    let parallex = ParallaxPagerView(
-      containerViewController: self,
-      headerView: imgView,
-      tabsView: tabsView,
-      viewControllers: viewControllers,
-      delegate: self
+
+    let parallexView = ParallaxPagerView(
+      containerViewController: self, headerView: imgView,
+      headerHeight: 300.0,
+      minimumHeaderHeight: 84.0,
+      scaleHeaderOnBounce: true,
+      contentViewController: viewController6,
+      parallaxDelegate: self
     )
-    view.addSubview(parallex)
+    view.addSubview(parallexView)
+
+    Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (_) in
+      parallexView.setupPager(with: viewControllers, tabsViewConfig: tabsConfig, pagerDelegate: nil)
+    }
   }
 }
 
-extension ViewController: ParallaxPagerViewDelegate {
+extension ViewController: ParallaxViewDelegate {
   func parallaxViewDidScrollBy(percentage: CGFloat, oldOffset: CGPoint, newOffset: CGPoint) {
 
   }

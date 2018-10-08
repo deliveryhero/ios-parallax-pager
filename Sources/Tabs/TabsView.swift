@@ -13,11 +13,19 @@ fileprivate class TabView: UIView {
   let index: Int
   let button: UIButton
   let title: String
+  let defaultColor: UIColor
+  let selectedColor: UIColor
+  let defaultFont: UIFont
+  let selectedFont: UIFont
   unowned let tabsView: TabsView
 
   init(
     title: String,
     index: Int,
+    defaultColor: UIColor,
+    selectedColor: UIColor,
+    defaultFont: UIFont,
+    selectedFont: UIFont,
     tabsView: TabsView
     ) {
     self.index = index
@@ -25,7 +33,13 @@ fileprivate class TabView: UIView {
     self.tabsView = tabsView
     button.setTitle(title, for: .normal)
     button.sizeToFit()
-    button.setTitleColor(UIColor.black, for: .normal)
+    button.setTitleColor(defaultColor, for: .normal)
+    button.titleLabel?.font = defaultFont
+
+    self.defaultColor = defaultColor
+    self.selectedColor = selectedColor
+    self.defaultFont = defaultFont
+    self.selectedFont = selectedFont
 
     self.title = title
     let buttonFrame = button.frame
@@ -33,6 +47,14 @@ fileprivate class TabView: UIView {
     super.init(frame: frame)
     button.addTarget(self, action:#selector(tabClicked), for: .touchUpInside)
     addSubview(button)
+  }
+
+  func setSelected(selected: Bool) {
+    button.isSelected = selected
+    let titleColor = selected ? selectedColor : defaultColor
+    button.setTitleColor(titleColor, for: .normal)
+    let titleFont = selected ? selectedFont : defaultFont
+    button.titleLabel?.font = titleFont
   }
 
   override var frame: CGRect {
@@ -43,7 +65,6 @@ fileprivate class TabView: UIView {
     }
   }
 
-
   @objc private func tabClicked() {
     tabsView.clickedTab(at: index)
   }
@@ -53,59 +74,77 @@ fileprivate class TabView: UIView {
   }
 }
 
-public protocol TabsViewDelegate: AnyObject {
-  func didSelectTab(at index: Int, previouslySelected: Int)
-}
-
-public final class TabsView: UIView {
+class TabsView: UIView {
 
   public var onSelectedTabChanging:(_ oldTab: Int, _ newTab: Int) -> Void = {_, _ in }
 
   @IBOutlet fileprivate weak var scrollView: UIScrollView!
-  fileprivate  weak var delegate : TabsViewDelegate?
+  @IBOutlet fileprivate weak var scrollViewWidthConstraint: NSLayoutConstraint!
   fileprivate  let selectionIndicatorView = UIView()
+  fileprivate var tabsConfig: TabsConfig!
   fileprivate  var tabsList = [TabView]()
   private(set) var selectedIndex: Int = 0
-  let selectionIndicatorHeight:CGFloat = 3.0
 
-  public static func tabsViewFor(titles: [String], height: CGFloat, delegate: TabsViewDelegate?) -> TabsView {
+  static func tabsView(with config: TabsConfig) -> TabsView {
     let bundle = Bundle(identifier:"com.ParallaxPagerView.ParallaxPagerView-iOS")
     let tabsView = bundle!.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
-    tabsView.delegate = delegate
-    tabsView.createTabsFor(titles: titles)
-    tabsView.frame = CGRect(x: 0, y: 0, width: tabsView.frame.size.width, height: height)
+    tabsView.tabsConfig = config
+    tabsView.createTabs()
+    tabsView.frame = CGRect(x: 0, y: 0, width: tabsView.frame.size.width, height: config.height)
     tabsView.setupSelectionIndicator()
     return tabsView
   }
 
   private func setupSelectionIndicator() {
-    selectionIndicatorView.backgroundColor = UIColor.red
+    selectionIndicatorView.backgroundColor = tabsConfig.selectionIndicatorColor
     scrollView.addSubview(selectionIndicatorView)
   }
 
-  private func createTabsFor(titles: [String]) {
+  private func createTabs() {
 
-    var xOrigin: CGFloat = 16.0
-    for (index, title) in titles.enumerated() {
+    var xOrigin: CGFloat = tabsConfig.tabsPadding
+
+    for (index, title) in tabsConfig.titles.enumerated() {
       let tab = TabView(
         title: title,
         index: index,
+        defaultColor: tabsConfig.defaultTabTitleColor,
+        selectedColor: tabsConfig.selectedTabTitleColor,
+        defaultFont: tabsConfig.defaultTabTitleFont,
+        selectedFont: tabsConfig.selectedTabTitleFont,
         tabsView: self
       )
 
-      tab.frame = CGRect(x: xOrigin,
-                         y: 0,
-                         width: tab.frame.size.width,
-                         height: tab.frame.size.height)
-      xOrigin += tab.frame.size.width + 16.0
+      tab.frame = CGRect(
+        x: xOrigin,
+        y: 0,
+        width: tab.frame.size.width,
+        height: tab.frame.size.height
+      )
+      xOrigin += tab.frame.size.width + tabsConfig.tabsPadding
       scrollView.addSubview(tab)
       tabsList.append(tab)
+
+      if index == 0 { tab.setSelected(selected: true) }
     }
-    var frame = scrollView.frame
-    let middleX = ((frame.size.width - xOrigin) / 2.0)
-    frame.origin.x = max(middleX, 0)
-    frame.size.width = xOrigin
+
     scrollView.contentSize = CGSize(width: xOrigin, height: 0)
+
+    if xOrigin < scrollView.frame.size.width && tabsConfig.tabsShouldBeCentered == true {
+      scrollViewWidthConstraint.isActive = false
+      scrollView.addConstraint(
+        NSLayoutConstraint(
+          item: scrollView,
+          attribute: .width,
+          relatedBy: .equal,
+          toItem: nil,
+          attribute: .notAnAttribute,
+          multiplier: 1.0,
+          constant: xOrigin
+        )
+      )
+      layoutSubviews()
+    }
   }
 
   override public func layoutSubviews() {
@@ -119,7 +158,7 @@ public final class TabsView: UIView {
       x: selectedTabFrame.origin.x,
       y: selectedTabFrame.size.height,
       width: selectedTabFrame.size.width,
-      height: selectionIndicatorHeight
+      height: tabsConfig.selectionIndicatorHeight
     )
     UIView.animate(withDuration: 0.3) {[weak self] in
       self?.selectionIndicatorView.frame = frame
@@ -128,7 +167,6 @@ public final class TabsView: UIView {
 
   fileprivate func clickedTab(at index: Int) {
     if index == selectedIndex { return }
-    delegate?.didSelectTab(at: index, previouslySelected: selectedIndex)
     onSelectedTabChanging(index, selectedIndex)
     selectedIndex = index
     let selectedTab = tabsList[index]
@@ -139,6 +177,9 @@ public final class TabsView: UIView {
     offsetX = max(0.0, offsetX)
     scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: true)
     updateSelectionIndicator()
+    for (tabIndex, tab) in tabsList.enumerated() {
+      tab.setSelected(selected: tabIndex == index)
+    }
   }
 
   func setSelected(index: Int) {
