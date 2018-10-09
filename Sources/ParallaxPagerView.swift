@@ -103,17 +103,19 @@ public final class ParallaxPagerView: UIView {
     containerViewController: UIViewController,
     headerView: UIView,
     headerHeight: CGFloat,
+    minimumHeaderHeight: CGFloat,
+    scaleHeaderOnBounce: Bool,
     tabsViewConfig: TabsConfig,
     viewControllers: [TabViewController],
-    pagerDelegate: PagerDelegate? = nil,
-    parallaxDelegate: ParallaxViewDelegate? = nil
+    pagerDelegate: PagerDelegate,
+    parallaxDelegate: ParallaxViewDelegate
     ) {
     self.init(
       containerViewController: containerViewController,
       headerView: headerView,
       headerHeight: headerHeight,
-      minimumHeaderHeight: 84.0,
-      scaleHeaderOnBounce: true,
+      minimumHeaderHeight: minimumHeaderHeight,
+      scaleHeaderOnBounce: scaleHeaderOnBounce,
       tabsView: TabsView.tabsView(with: tabsViewConfig),
       viewControllers: viewControllers,
       pagerDelegate: pagerDelegate,
