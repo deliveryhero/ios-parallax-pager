@@ -598,6 +598,8 @@ public final class ParallaxPagerView: UIView {
       self.currentDisplayController?.removeFromParent()
       self.currentDisplayController?.didMove(toParent: nil)
       self.currentDisplayController = selectedViewController
+
+      self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
     }
 
     let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
