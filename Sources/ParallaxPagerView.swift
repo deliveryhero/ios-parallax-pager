@@ -18,7 +18,7 @@ public final class ParallaxPagerView: UIView {
   private var originalTopInset: CGFloat = 0.0
 
   private var headerView = UIView()
-  private(set) var tabsView: (UIView & PagerTab)?
+  public private(set) var tabsView: (UIView & PagerTab)?
 
   private var viewControllers = [TabViewController]()
   private let hasShownController = NSHashTable<UIViewController>.weakObjects()

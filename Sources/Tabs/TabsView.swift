@@ -26,6 +26,7 @@ fileprivate class TabView: UIView {
     selectedColor: UIColor,
     defaultFont: UIFont,
     selectedFont: UIFont,
+    height: CGFloat,
     tabsView: TabsView
     ) {
     self.index = index
@@ -43,7 +44,7 @@ fileprivate class TabView: UIView {
 
     self.title = title
     let buttonFrame = button.frame
-    let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: buttonFrame.size.height)
+    let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
     button.addTarget(self, action:#selector(tabClicked), for: .touchUpInside)
     addSubview(button)
@@ -89,8 +90,8 @@ class TabsView: UIView {
     let bundle = Bundle(identifier:"com.ParallaxPagerView.ParallaxPagerView-iOS")
     let tabsView = bundle!.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
     tabsView.tabsConfig = config
-    tabsView.createTabs()
     tabsView.frame = CGRect(x: 0, y: 0, width: tabsView.frame.size.width, height: config.height)
+    tabsView.createTabs()
     tabsView.setupSelectionIndicator()
     return tabsView
   }
@@ -112,6 +113,7 @@ class TabsView: UIView {
         selectedColor: tabsConfig.selectedTabTitleColor,
         defaultFont: tabsConfig.defaultTabTitleFont,
         selectedFont: tabsConfig.selectedTabTitleFont,
+        height: self.frame.size.height,
         tabsView: self
       )
 
@@ -156,7 +158,7 @@ class TabsView: UIView {
     let selectedTabFrame = tabsList[selectedIndex].frame
     let frame = CGRect(
       x: selectedTabFrame.origin.x,
-      y: selectedTabFrame.size.height,
+      y: selectedTabFrame.size.height - tabsConfig.selectionIndicatorHeight,
       width: selectedTabFrame.size.width,
       height: tabsConfig.selectionIndicatorHeight
     )
