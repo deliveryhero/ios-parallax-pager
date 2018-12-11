@@ -11,23 +11,21 @@ import UIKit
 
 public typealias TabViewController = UIViewController & ParallaxContentViewController
 
-public protocol ParallaxContentViewController {
-  func scrollableView() -> UIScrollView?
+@objc public protocol ParallaxContentViewController {
+  @objc func scrollableView() -> UIScrollView?
 }
 
-public protocol ParallaxViewDelegate {
-  func parallaxViewDidScrollBy(percentage: CGFloat, oldOffset: CGPoint, newOffset: CGPoint)
+@objc public protocol ParallaxViewDelegate {
+  @objc func parallaxViewDidScrollBy(percentage: CGFloat, oldOffset: CGPoint, newOffset: CGPoint)
 }
 
-public protocol PagerDelegate {
-  func didSelectTab(at index: Int, previouslySelected: Int)
+@objc public protocol PagerDelegate {
+  @objc func didSelectTab(at index: Int, previouslySelected: Int)
 }
 
-public protocol PagerTab {
-  var onSelectedTabChanging:(_ oldTab: Int, _ newTab: Int) -> Void { set get }
-  func currentSelectedIndex() -> Int
-  func numberOfTabs() -> Int
-  func setSelectedTab(at index: Int)
+@objc public protocol PagerTab {
+  @objc var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void { set get }
+  @objc func currentSelectedIndex() -> Int
+  @objc func numberOfTabs() -> Int
+  @objc func setSelectedTab(at index: Int)
 }
-
-
