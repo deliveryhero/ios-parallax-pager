@@ -148,59 +148,70 @@ public final class ParallaxPagerView: UIView {
     fatalError("init(coder:) Shouldn't be used, Please use provided initializer")
   }
 
+  @available(iOSApplicationExtension 9.0, *)
   private func layoutInternalScrollView() {
     insertSubview(internalScrollView, at: 0)
-    addConstraint(
-      NSLayoutConstraint(
-        item: internalScrollView,
-        attribute: .left,
-        relatedBy: .equal,
-        toItem: self,
-        attribute: .left,
-        multiplier: 1.0,
-        constant: 0
-      )
-    )
-    addConstraint(
-      NSLayoutConstraint(
-        item: internalScrollView,
-        attribute: .right,
-        relatedBy: .equal,
-        toItem: self,
-        attribute: .right,
-        multiplier: 1.0,
-        constant: 0
-      )
-    )
-    addConstraint(
-      NSLayoutConstraint(
-        item: internalScrollView,
-        attribute: .top,
-        relatedBy: .equal,
-        toItem: self,
-        attribute: .top,
-        multiplier: 1.0,
-        constant: 0
-      )
-    )
-    addConstraint(
-      NSLayoutConstraint(
-        item: internalScrollView,
-        attribute: .bottom,
-        relatedBy: .equal,
-        toItem: self,
-        attribute: .bottom,
-        multiplier: 1.0,
-        constant: 0
-      )
-    )
-    setNeedsLayout()
-    layoutIfNeeded()
+//    addConstraint(
+//      NSLayoutConstraint(
+//        item: internalScrollView,
+//        attribute: .left,
+//        relatedBy: .equal,
+//        toItem: self,
+//        attribute: .left,
+//        multiplier: 1.0,
+//        constant: 0
+//      )
+//    )
+//    addConstraint(
+//      NSLayoutConstraint(
+//        item: internalScrollView,
+//        attribute: .right,
+//        relatedBy: .equal,
+//        toItem: self,
+//        attribute: .right,
+//        multiplier: 1.0,
+//        constant: 0
+//      )
+//    )
+//    addConstraint(
+//      NSLayoutConstraint(
+//        item: internalScrollView,
+//        attribute: .top,
+//        relatedBy: .equal,
+//        toItem: self,
+//        attribute: .top,
+//        multiplier: 1.0,
+//        constant: 0
+//      )
+//    )
+//    addConstraint(
+//      NSLayoutConstraint(
+//        item: internalScrollView,
+//        attribute: .bottom,
+//        relatedBy: .equal,
+//        toItem: self,
+//        attribute: .bottom,
+//        multiplier: 1.0,
+//        constant: 0
+//      )
+//    )
+//    setNeedsLayout()
+//    layoutIfNeeded()
+    internalScrollView.translatesAutoresizingMaskIntoConstraints = false
+    internalScrollView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+    internalScrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+    internalScrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+    internalScrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+
   }
 
   private func baseConfig() {
 
-    layoutInternalScrollView()
+    if #available(iOSApplicationExtension 9.0, *) {
+      layoutInternalScrollView()
+    } else {
+      // Fallback on earlier versions
+    }
 
     containerViewController.automaticallyAdjustsScrollViewInsets = false
     containerViewController.extendedLayoutIncludesOpaqueBars = false
