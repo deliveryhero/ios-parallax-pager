@@ -9,10 +9,11 @@
 import Foundation
 import UIKit
 
+@available(iOSApplicationExtension 9.0, *)
 public final class ParallaxPagerView: UIView {
 
   private var tabsHeight: CGFloat = 0
-  private let headerHeight: CGFloat
+  private var headerHeight: CGFloat
   private let minimumHeaderHeight: CGFloat
 
   private var originalTopInset: CGFloat = 0.0
@@ -126,22 +127,49 @@ public final class ParallaxPagerView: UIView {
   public func setupPager(
     with viewControllers: [TabViewController],
     tabsView: (PagerTab & UIView),
-    pagerDelegate: PagerDelegate? = nil
+    pagerDelegate: PagerDelegate? = nil,
+    animated: Bool
   ) {
 
     self.tabsView = tabsView
     self.tabsHeight = tabsView.frame.size.height
     initialLaoyoutTabsView()
     self.viewControllers = viewControllers
-    self.didSelectTabAtIndex(index: 0, previouslySelected: -1)
+    internalScrollView.alpha = 0.0
+    self.tabsView?.alpha = 0.0
+    self.didSelectTabAtIndex(index: 0, previouslySelected: -1, animated: false)
+    let duration = animated ? 0.3 : 0.0;
+    UIView.animate(withDuration: duration) {
+      self.internalScrollView.alpha = 1.0
+      self.tabsView?.alpha = 1.0
+    }
   }
 
   public func setupPager(
     with viewControllers: [TabViewController],
     tabsViewConfig: TabsConfig,
-    pagerDelegate: PagerDelegate? = nil
+    pagerDelegate: PagerDelegate? = nil,
+    animated: Bool
   ) {
-    setupPager(with: viewControllers, tabsView: TabsView.tabsView(with: tabsViewConfig))
+    setupPager(with: viewControllers, tabsView: TabsView.tabsView(with: tabsViewConfig), animated: animated)
+  }
+
+  public func setHeaderHeight(_ height: CGFloat) {
+    guard height > minimumHeaderHeight else { return }
+    let heightDiff = height - headerHeight
+    headerHeight = height
+    layoutContentViewControllers()
+    let heightToBe = headerHeightConstraint?.constant ?? 0.0 + heightDiff
+    if heightToBe > minimumHeaderHeight {
+      headerHeightConstraint?.constant = heightToBe
+      guard
+        let currentDisplayController = currentDisplayController,
+        let currentScrollView = scrollViewInViewController(vc: currentDisplayController)
+      else { return }
+      var offsetToBe = currentScrollView.contentOffset.y
+      offsetToBe -= heightDiff
+      currentScrollView.contentOffset = CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe)
+    }
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -151,67 +179,16 @@ public final class ParallaxPagerView: UIView {
   @available(iOSApplicationExtension 9.0, *)
   private func layoutInternalScrollView() {
     insertSubview(internalScrollView, at: 0)
-//    addConstraint(
-//      NSLayoutConstraint(
-//        item: internalScrollView,
-//        attribute: .left,
-//        relatedBy: .equal,
-//        toItem: self,
-//        attribute: .left,
-//        multiplier: 1.0,
-//        constant: 0
-//      )
-//    )
-//    addConstraint(
-//      NSLayoutConstraint(
-//        item: internalScrollView,
-//        attribute: .right,
-//        relatedBy: .equal,
-//        toItem: self,
-//        attribute: .right,
-//        multiplier: 1.0,
-//        constant: 0
-//      )
-//    )
-//    addConstraint(
-//      NSLayoutConstraint(
-//        item: internalScrollView,
-//        attribute: .top,
-//        relatedBy: .equal,
-//        toItem: self,
-//        attribute: .top,
-//        multiplier: 1.0,
-//        constant: 0
-//      )
-//    )
-//    addConstraint(
-//      NSLayoutConstraint(
-//        item: internalScrollView,
-//        attribute: .bottom,
-//        relatedBy: .equal,
-//        toItem: self,
-//        attribute: .bottom,
-//        multiplier: 1.0,
-//        constant: 0
-//      )
-//    )
-//    setNeedsLayout()
-//    layoutIfNeeded()
     internalScrollView.translatesAutoresizingMaskIntoConstraints = false
     internalScrollView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
     internalScrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
     internalScrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
     internalScrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-
   }
 
   private func baseConfig() {
 
-    if #available(iOSApplicationExtension 9.0, *) {
-      layoutInternalScrollView()
-    } else {
-      // Fallback on earlier versions
-    }
+    layoutInternalScrollView()
 
     containerViewController.automaticallyAdjustsScrollViewInsets = false
     containerViewController.extendedLayoutIncludesOpaqueBars = false
@@ -285,7 +262,7 @@ public final class ParallaxPagerView: UIView {
     // Setup TabsView.
     if tabsView != nil {
       tabsView!.onSelectedTabChanging = { [weak self] newIndex, oldIndex in
-        self?.didSelectTabAtIndex(index: newIndex, previouslySelected: oldIndex)
+        self?.didSelectTabAtIndex(index: newIndex, previouslySelected: oldIndex, animated: true)
       }
       addSubview(tabsView!)
       setupSwipeGestures()
@@ -359,31 +336,41 @@ public final class ParallaxPagerView: UIView {
 
   private func addObserver(for scrollView: UIScrollView) {
 
-    contentOffsetObservation = scrollView.observe(\.contentOffset, options: [.old, .new], changeHandler: { [weak self] (object, change) in
+    contentOffsetObservation = scrollView.observe(
+      \.contentOffset,
+      options: [.old, .new],
+      changeHandler: { [weak self] (object, change) in
 
-      guard let `self` = self, self.ignoreOffsetChanged == false else { return }
-      let newOffset = change.newValue ?? CGPoint.zero
-      let oldOffset = change.oldValue ?? CGPoint.zero
-      if self.shouldIgnoreOffsetUpdate(for: object, oldOffset: oldOffset, newOffset: newOffset) { return }
-      self.layoutForContentOffsetUpdate(scrollView: object, oldOffset: oldOffset, offset: newOffset)
-      // Notify delegate
-      let headerHeightConstraintConstant = self.headerHeightConstraint?.constant ?? 0.0
-      let currentProgress = headerHeightConstraintConstant - self.minimumHeaderHeight
-      let maximumHeight = self.headerHeight  - self.minimumHeaderHeight
-      let percentage = currentProgress / maximumHeight
-      self.parallaxDelegate?.parallaxViewDidScrollBy(percentage: percentage, oldOffset: oldOffset, newOffset: newOffset)
+        guard let `self` = self, self.ignoreOffsetChanged == false else { return }
+        let newOffset = change.newValue ?? CGPoint.zero
+        let oldOffset = change.oldValue ?? CGPoint.zero
+        if self.shouldIgnoreOffsetUpdate(for: object, oldOffset: oldOffset, newOffset: newOffset) { return }
+        self.layoutForContentOffsetUpdate(scrollView: object, oldOffset: oldOffset, offset: newOffset)
+        // Notify delegate
+        let headerHeightConstraintConstant = self.headerHeightConstraint?.constant ?? 0.0
+        let currentProgress = headerHeightConstraintConstant - self.minimumHeaderHeight
+        let maximumHeight = self.headerHeight  - self.minimumHeaderHeight
+        let percentage = currentProgress / maximumHeight
+        self.parallaxDelegate?.parallaxViewDidScrollBy(
+          percentage: percentage,
+          oldOffset: oldOffset,
+          newOffset: newOffset
+        )
     })
 
-    contentInsetObservation = scrollView.observe(\.contentInset, options: [.old, .new], changeHandler: { [weak self] (object, change) in
-      /// --->
-      guard let `self` = self else { return }
+    contentInsetObservation = scrollView.observe(
+      \.contentInset,
+      options: [.old, .new],
+      changeHandler: { [weak self] (object, change) in
+        /// --->
+        guard let `self` = self else { return }
 
-      let newInset = change.newValue ?? UIEdgeInsets.zero
-      if abs(newInset.top - self.originalTopInset) < 2 {
-        self.ignoreOffsetChanged = false
-      } else {
-        self.ignoreOffsetChanged = true
-      }
+        let newInset = change.newValue ?? UIEdgeInsets.zero
+        if abs(newInset.top - self.originalTopInset) < 2 {
+          self.ignoreOffsetChanged = false
+        } else {
+          self.ignoreOffsetChanged = true
+        }
     })
   }
 
@@ -528,7 +515,9 @@ public final class ParallaxPagerView: UIView {
       internalScrollView.alwaysBounceVertical = false
     }
 
-    originalTopInset = headerHeight + tabsHeight
+    let constraintValue = headerHeightConstraint?.constant ?? 0.0
+    let height = max(constraintValue, headerHeight)
+    originalTopInset = height + tabsHeight
     if #available(iOS 11.0, *) {
       scrollView.contentInsetAdjustmentBehavior = .never
     }
@@ -538,16 +527,20 @@ public final class ParallaxPagerView: UIView {
     if (containerViewController.tabBarController?.tabBar.isHidden == false) {
       bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0.0
     }
-    scrollView.contentInset = UIEdgeInsets(top: originalTopInset, left: CGFloat(0.0), bottom: bottomInset, right: CGFloat(0.0))
+    scrollView.contentInset = UIEdgeInsets(
+      top: originalTopInset, left: CGFloat(0.0),
+      bottom: bottomInset,
+      right: CGFloat(0.0)
+    )
 
     if hasShownController.contains(vc) == false {
       hasShownController.add(vc)
       scrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
       // set gestures priority.
-      if let rightSwipeGesture = rightSwipeGestureRecognizer, let leftSwipeGesture = leftSwipeGestureRecognizer {
+      if let rightGesture = rightSwipeGestureRecognizer, let leftGesture = leftSwipeGestureRecognizer {
         scrollView.gestureRecognizers?.forEach {
-          $0.require(toFail: rightSwipeGesture)
-          $0.require(toFail: leftSwipeGesture)
+          $0.require(toFail: rightGesture)
+          $0.require(toFail: leftGesture)
         }
       }
     }
@@ -576,7 +569,7 @@ public final class ParallaxPagerView: UIView {
 
   }
 
-  private func didSelectTabAtIndex(index: Int, previouslySelected: Int) {
+  private func didSelectTabAtIndex(index: Int, previouslySelected: Int, animated: Bool) {
     guard index >= 0, index < viewControllers.count else {
       print("ERROR: Invalid Selection Index.")
       return
@@ -603,7 +596,8 @@ public final class ParallaxPagerView: UIView {
       selectedViewConstraints.forEach { $0.constant = 0.0 }
     }
     internalScrollView.setNeedsLayout()
-    UIView.animate(withDuration: 0.3, animations: {
+    let duration = animated ? 0.3 : 0.0
+    UIView.animate(withDuration: duration, animations: {
       self.internalScrollView.layoutIfNeeded()
     }) { (_) in
       self.currentDisplayController?.willMove(toParent: nil)
@@ -641,11 +635,17 @@ public final class ParallaxPagerView: UIView {
   }
 
   private func setupSwipeGestures() {
-    rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action:  #selector(swipeDetected(gesture:)))
+    rightSwipeGestureRecognizer = UISwipeGestureRecognizer(
+      target: self,
+      action:  #selector(swipeDetected(gesture:))
+    )
     rightSwipeGestureRecognizer!.direction = .right
     addGestureRecognizer(rightSwipeGestureRecognizer!)
 
-    leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action:  #selector(swipeDetected(gesture:)))
+    leftSwipeGestureRecognizer = UISwipeGestureRecognizer(
+      target: self,
+      action:  #selector(swipeDetected(gesture:))
+    )
     leftSwipeGestureRecognizer!.direction = .left
     addGestureRecognizer(leftSwipeGestureRecognizer!)
   }

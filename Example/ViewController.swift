@@ -11,6 +11,21 @@ import ParallaxPagerView
 
 class ViewController: UIViewController {
 
+  var headerHeight: CGFloat = 300.0
+  var parallexView: ParallaxPagerView!
+  @IBOutlet weak var buttonsView: UIView!
+
+  @IBAction func plusClicked(_ sender: Any) {
+    headerHeight += 30
+    parallexView.setHeaderHeight(headerHeight)
+  }
+
+  @IBAction func minusClicked(_ sender: Any) {
+    guard headerHeight > 0 else { return }
+    headerHeight -= 30
+    parallexView.setHeaderHeight(headerHeight)
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
@@ -53,9 +68,9 @@ class ViewController: UIViewController {
     let imgView = UIImageView(image: UIImage(named: "photo.jpg"));
     imgView.contentMode = .scaleAspectFill
 
-    let parallexView = ParallaxPagerView(
+    parallexView = ParallaxPagerView(
       containerViewController: self, headerView: imgView,
-      headerHeight: 300.0,
+      headerHeight: headerHeight,
       minimumHeaderHeight: 84.0,
       scaleHeaderOnBounce: true,
       contentViewController: viewController6,
@@ -63,9 +78,18 @@ class ViewController: UIViewController {
     )
     view.addSubview(parallexView)
 
-    Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (_) in
-      parallexView.setupPager(with: viewControllers, tabsViewConfig: tabsConfig, pagerDelegate: nil)
+    Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (_) in
+      self?.parallexView.setupPager(
+        with: viewControllers,
+        tabsViewConfig: tabsConfig,
+        pagerDelegate: nil,
+        animated: true
+      )
     }
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    view.bringSubviewToFront(buttonsView)
   }
 }
 
