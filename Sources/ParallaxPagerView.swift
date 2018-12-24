@@ -166,8 +166,7 @@ public final class ParallaxPagerView: UIView {
         let currentDisplayController = currentDisplayController,
         let currentScrollView = scrollViewInViewController(vc: currentDisplayController)
       else { return }
-      var offsetToBe = currentScrollView.contentOffset.y
-      offsetToBe -= heightDiff
+      let offsetToBe = currentScrollView.contentOffset.y - heightDiff
       currentScrollView.contentOffset = CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe)
     }
   }
@@ -361,8 +360,8 @@ public final class ParallaxPagerView: UIView {
     contentInsetObservation = scrollView.observe(
       \.contentInset,
       options: [.old, .new],
-      changeHandler: { [weak self] (object, change) in
-        /// --->
+      changeHandler: { [weak self] (_, change) in
+
         guard let `self` = self else { return }
 
         let newInset = change.newValue ?? UIEdgeInsets.zero
@@ -528,7 +527,8 @@ public final class ParallaxPagerView: UIView {
       bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0.0
     }
     scrollView.contentInset = UIEdgeInsets(
-      top: originalTopInset, left: CGFloat(0.0),
+      top: originalTopInset,
+      left: CGFloat(0.0),
       bottom: bottomInset,
       right: CGFloat(0.0)
     )
@@ -637,14 +637,14 @@ public final class ParallaxPagerView: UIView {
   private func setupSwipeGestures() {
     rightSwipeGestureRecognizer = UISwipeGestureRecognizer(
       target: self,
-      action:  #selector(swipeDetected(gesture:))
+      action: #selector(swipeDetected(gesture:))
     )
     rightSwipeGestureRecognizer!.direction = .right
     addGestureRecognizer(rightSwipeGestureRecognizer!)
 
     leftSwipeGestureRecognizer = UISwipeGestureRecognizer(
       target: self,
-      action:  #selector(swipeDetected(gesture:))
+      action: #selector(swipeDetected(gesture:))
     )
     leftSwipeGestureRecognizer!.direction = .left
     addGestureRecognizer(leftSwipeGestureRecognizer!)
