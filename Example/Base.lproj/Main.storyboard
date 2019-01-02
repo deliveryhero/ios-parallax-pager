@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,22 +12,81 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ParallaxTable" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuD-SP-nr2">
+                                <rect key="frame" x="244" y="29" width="120" height="51"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Header Height" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZMU-HL-dje">
+                                        <rect key="frame" x="-11" y="-2" width="146" height="21"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="b5a-cn-nMh"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="black" pointSize="14"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3V2-fe-x2h">
+                                        <rect key="frame" x="19" y="20" width="30" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.80172318262411346" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="+">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="plusClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7wo-Ap-fk8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZKv-mu-ryB">
+                                        <rect key="frame" x="70" y="20" width="30" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.80172318262411346" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="-">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="minusClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wr6-fU-Jdp"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="3V2-fe-x2h" firstAttribute="leading" secondItem="tuD-SP-nr2" secondAttribute="leading" constant="19" id="48A-E1-jXZ"/>
+                                    <constraint firstItem="ZMU-HL-dje" firstAttribute="centerX" secondItem="tuD-SP-nr2" secondAttribute="centerX" constant="2" id="7xK-zB-RuW"/>
+                                    <constraint firstItem="3V2-fe-x2h" firstAttribute="firstBaseline" secondItem="ZKv-mu-ryB" secondAttribute="baseline" id="DTj-XY-W0z"/>
+                                    <constraint firstItem="3V2-fe-x2h" firstAttribute="top" secondItem="ZMU-HL-dje" secondAttribute="bottom" constant="1" id="JtM-oh-UWr"/>
+                                    <constraint firstItem="ZMU-HL-dje" firstAttribute="top" secondItem="tuD-SP-nr2" secondAttribute="top" constant="-2" id="Mcu-nr-Pou"/>
+                                    <constraint firstItem="ZMU-HL-dje" firstAttribute="leading" secondItem="tuD-SP-nr2" secondAttribute="leading" constant="-11" id="VQ6-kk-wq2"/>
+                                    <constraint firstAttribute="height" constant="51" id="YQt-9P-dlz"/>
+                                    <constraint firstAttribute="width" constant="120" id="g8P-av-Mhh"/>
+                                    <constraint firstItem="3V2-fe-x2h" firstAttribute="baseline" secondItem="ZKv-mu-ryB" secondAttribute="firstBaseline" id="jzt-4L-Ku3"/>
+                                    <constraint firstAttribute="bottom" secondItem="3V2-fe-x2h" secondAttribute="bottom" constant="1" id="sey-08-MpN"/>
+                                    <constraint firstItem="3V2-fe-x2h" firstAttribute="top" secondItem="ZKv-mu-ryB" secondAttribute="top" id="tU6-Mj-5lh"/>
+                                    <constraint firstItem="ZKv-mu-ryB" firstAttribute="leading" secondItem="3V2-fe-x2h" secondAttribute="trailing" constant="21" id="wZd-XE-4BY"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tuD-SP-nr2" secondAttribute="trailing" constant="11" id="9NF-g1-8ya"/>
+                            <constraint firstItem="tuD-SP-nr2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="9" id="JDO-Cr-Edi"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="buttonsView" destination="tuD-SP-nr2" id="6oA-D2-8nb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-660" y="659"/>
+            <point key="canvasLocation" x="-991.20000000000005" y="184.85757121439281"/>
         </scene>
         <!--Demo Table View Controller-->
         <scene sceneID="vtF-VQ-jXB">
             <objects>
-                <tableViewController storyboardIdentifier="DemoTableView" id="fHX-Cg-0BJ" customClass="DemoTableViewController" customModule="ParallaxTable" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DemoTableView" id="fHX-Cg-0BJ" customClass="DemoTableViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="chZ-eO-oMT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,7 +191,7 @@
         <!--No Scroll View Controller-->
         <scene sceneID="WnZ-pT-80e">
             <objects>
-                <viewController storyboardIdentifier="NoScrollVC" id="04b-jt-mhW" customClass="NoScrollViewController" customModule="ParallaxTable" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NoScrollVC" id="04b-jt-mhW" customClass="NoScrollViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TbT-hI-COI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -187,6 +245,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xWC-y7-5CS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="721" y="659"/>
         </scene>
     </scenes>
 </document>
