@@ -11,8 +11,8 @@ import ParallaxPagerView
 
 class ViewController: UIViewController {
 
-  var headerHeight: CGFloat = 300.0
-  var parallexView: ParallaxPagerView!
+  var headerHeight: CGFloat = 300
+  var parallaxView: ParallaxPagerView!
   @IBOutlet weak var buttonsView: UIView!
 
   @IBAction func plusClicked(_ sender: Any) {
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
-    let storyboard = UIStoryboard(name: "Main", bundle:nil)
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let viewController1 = storyboard.instantiateViewController(withIdentifier: "DemoTableView") as! DemoTableViewController
     viewController1.numberOfCells = 20
     viewController1.shouldUseTemplateCell1 = true
@@ -68,7 +68,7 @@ class ViewController: UIViewController {
     let imgView = UIImageView(image: UIImage(named: "photo.jpg"));
     imgView.contentMode = .scaleAspectFill
 
-    parallexView = ParallaxPagerView(
+    parallaxView = ParallaxPagerView(
       containerViewController: self, headerView: imgView,
       headerHeight: headerHeight,
       minimumHeaderHeight: 84.0,
@@ -76,7 +76,7 @@ class ViewController: UIViewController {
       contentViewController: viewController6,
       parallaxDelegate: self
     )
-    view.addSubview(parallexView)
+    view.addSubview(parallaxView)
 
     Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (_) in
       self?.parallexView.setupPager(
