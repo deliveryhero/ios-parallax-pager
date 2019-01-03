@@ -16,7 +16,7 @@ public final class ParallaxPagerView: UIView {
   private var headerHeight: CGFloat
   private let minimumHeaderHeight: CGFloat
 
-  private var originalTopInset: CGFloat = 0.0
+  private var originalTopInset: CGFloat = 0
 
   private var headerView = UIView()
   public private(set) var tabsView: (UIView & PagerTab)?
@@ -66,7 +66,7 @@ public final class ParallaxPagerView: UIView {
     super.init(frame: containerViewController.view.bounds)
 
     baseConfig()
-    initialLaoyoutHeadrView()
+    initialLayoutsHeaderView()
     layoutContentViewControllers()
   }
 
@@ -95,9 +95,9 @@ public final class ParallaxPagerView: UIView {
     super.init(frame: containerViewController.view.bounds)
 
     baseConfig()
-    initialLaoyoutHeadrView()
+    initialLayoutsHeaderView()
     layoutContentViewControllers()
-    initialLaoyoutTabsView()
+    initialLayoutTabsView()
   }
 
   public convenience init(
@@ -133,7 +133,7 @@ public final class ParallaxPagerView: UIView {
 
     self.tabsView = tabsView
     self.tabsHeight = tabsView.frame.size.height
-    initialLaoyoutTabsView()
+    initialLayoutTabsView()
     self.viewControllers = viewControllers
     internalScrollView.alpha = 0.0
     self.tabsView?.alpha = 0.0
@@ -199,7 +199,7 @@ public final class ParallaxPagerView: UIView {
 
   private func layoutContentViewControllers() {
     if let firstVC = viewControllers.first {
-      layoutChildViewController(vc: firstVC, postion: 0.0)
+      layoutChildViewController(vc: firstVC, position: 0)
       internalScrollView.layoutIfNeeded()
       layoutSubviews()
       let scrollView = scrollViewInViewController(vc: firstVC) ?? internalScrollView
@@ -208,7 +208,7 @@ public final class ParallaxPagerView: UIView {
     }
   }
 
-  private func initialLaoyoutHeadrView() {
+  private func initialLayoutsHeaderView() {
     headerView.translatesAutoresizingMaskIntoConstraints = false
     headerHeightConstraint = NSLayoutConstraint(
       item: headerView,
@@ -256,7 +256,7 @@ public final class ParallaxPagerView: UIView {
     )
   }
 
-  private func initialLaoyoutTabsView() {
+  private func initialLayoutTabsView() {
 
     // Setup TabsView.
     if tabsView != nil {
@@ -326,7 +326,7 @@ public final class ParallaxPagerView: UIView {
     let isMovingDown = translation.y > 0.0;
     let deltaOfOffsetY = newOffset.y - oldOffset.y
 
-    // Results from debuging, found that there some akward values are coming randomly on scrolling.
+    // Results from debuging, found that there some awkward values are coming randomly on scrolling.
     // This condition below guarantee that this value are eliminated.
     if deltaOfOffsetY == 0.0 { return true }
     if (isMovingDown && deltaOfOffsetY > 0.0 && newOffset.y > 0.0) { return true }
@@ -444,7 +444,7 @@ public final class ParallaxPagerView: UIView {
   }
 
 
-  private func layoutChildViewController(vc: TabViewController, postion: CGFloat) {
+  private func layoutChildViewController(vc: TabViewController, position: CGFloat) {
 
     guard let view = vc.view else { return }
     view.preservesSuperviewLayoutMargins = true
@@ -465,7 +465,7 @@ public final class ParallaxPagerView: UIView {
       toItem: internalScrollView,
       attribute: .right,
       multiplier: 1.0,
-      constant: postion
+      constant: position
     )
     internalScrollView.addConstraint(contentViewTrailingConstraint!)
 
@@ -476,7 +476,7 @@ public final class ParallaxPagerView: UIView {
       toItem: internalScrollView,
       attribute: .left,
       multiplier: 1.0,
-      constant: postion
+      constant: position
     )
     internalScrollView.addConstraint(contentViewLeadingConstraint!)
 
@@ -584,7 +584,7 @@ public final class ParallaxPagerView: UIView {
     let newViewInitialPostion = shouldAnimateLeft ? bounds.size.width : -bounds.size.width
 
 
-    layoutChildViewController(vc: selectedViewController, postion: newViewInitialPostion)
+    layoutChildViewController(vc: selectedViewController, position: newViewInitialPostion)
     internalScrollView.setNeedsLayout()
     internalScrollView.layoutIfNeeded()
 
