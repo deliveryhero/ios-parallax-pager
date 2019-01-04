@@ -17,13 +17,13 @@ class ViewController: UIViewController {
 
   @IBAction func plusClicked(_ sender: Any) {
     headerHeight += 30
-    parallexView.setHeaderHeight(headerHeight)
+    parallaxView.setHeaderHeight(headerHeight)
   }
 
   @IBAction func minusClicked(_ sender: Any) {
     guard headerHeight > 0 else { return }
     headerHeight -= 30
-    parallexView.setHeaderHeight(headerHeight)
+    parallaxView.setHeaderHeight(headerHeight)
   }
 
   override func viewDidLoad() {
@@ -79,11 +79,16 @@ class ViewController: UIViewController {
     view.addSubview(parallaxView)
 
     Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (_) in
-      self?.parallexView.setupPager(
+      guard let `self` = self else { return }
+      self.parallaxView.setupPager(
         with: viewControllers,
         tabsViewConfig: tabsConfig,
-        pagerDelegate: nil,
-        animated: true
+        pagerDelegate: self as? PagerDelegate,
+        animated: true,
+        completion: {
+          self.headerHeight += 100
+          self.parallaxView.setHeaderHeight(self.headerHeight, animated: true)
+        }
       )
     }
   }
@@ -98,4 +103,3 @@ extension ViewController: ParallaxViewDelegate {
 
   }
 }
-
