@@ -168,18 +168,20 @@ public final class ParallaxPagerView: UIView {
   }
 
   public func setHeaderHeight(_ height: CGFloat, animated: Bool = false) {
-    guard height > minimumHeaderHeight,
-          let currentDisplayController = currentDisplayController,
-          let currentScrollView = scrollViewInViewController(vc: currentDisplayController) else {
+    guard height > minimumHeaderHeight else {
       return
     }
+
     let heightDiff = height - headerHeight
     headerHeight = height
-    updateScrollViewSize(vc: currentDisplayController, scrollView: currentScrollView)
+    layoutContentViewControllers()
     let heightToBe = headerHeightConstraint?.constant ?? 0 + heightDiff
     if heightToBe > minimumHeaderHeight {
       headerHeightConstraint?.constant = heightToBe
-
+      guard let currentDisplayController = currentDisplayController,
+            let currentScrollView = scrollViewInViewController(vc: currentDisplayController) else {
+        return
+      }
       let offsetToBe = currentScrollView.contentOffset.y - heightDiff
       currentScrollView.contentOffset = CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe)
       currentScrollView.setContentOffset(CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe), animated: animated)
