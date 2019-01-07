@@ -17,13 +17,13 @@ class ViewController: UIViewController {
 
   @IBAction func plusClicked(_ sender: Any) {
     headerHeight += 30
-    parallaxView.setHeaderHeight(headerHeight)
+    parallaxView.setHeaderHeight(headerHeight, animated: true)
   }
 
   @IBAction func minusClicked(_ sender: Any) {
     guard headerHeight > 0 else { return }
     headerHeight -= 30
-    parallaxView.setHeaderHeight(headerHeight)
+    parallaxView.setHeaderHeight(headerHeight, animated: true)
   }
 
   override func viewDidLoad() {
