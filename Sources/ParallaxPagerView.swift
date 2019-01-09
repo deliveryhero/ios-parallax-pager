@@ -520,7 +520,34 @@ public final class ParallaxPagerView: UIView {
 
     let scrollView = scrollViewInViewController(vc: vc) ?? internalScrollView
 
-    updateScrollViewSize(vc: vc, scrollView: scrollView)
+    internalScrollView.contentSize = bounds.size
+    if scrollViewInViewController(vc: vc) == nil {
+      internalScrollView.isScrollEnabled = true
+      internalScrollView.alwaysBounceVertical = false
+      internalScrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
+    } else {
+      internalScrollView.isScrollEnabled = false
+      internalScrollView.alwaysBounceVertical = false
+    }
+
+    let constraintValue = headerHeightConstraint?.constant ?? 0
+    let height = max(constraintValue, headerHeight)
+    originalTopInset = height + tabsHeight
+    if #available(iOS 11.0, *) {
+      scrollView.contentInsetAdjustmentBehavior = .never
+    }
+
+    // fixed bottom tabbar inset
+    var bottomInset: CGFloat = 0
+    if containerViewController.tabBarController?.tabBar.isHidden == false {
+      bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0
+    }
+    scrollView.contentInset = UIEdgeInsets(
+      top: originalTopInset,
+      left: CGFloat(0),
+      bottom: bottomInset,
+      right: CGFloat(0)
+    )
 
     if hasShownController.contains(vc) == false {
       hasShownController.add(vc)
@@ -554,39 +581,6 @@ public final class ParallaxPagerView: UIView {
         multiplier: 1.0,
         constant: 0.0
       )
-    )
-
-  }
-
-  private func updateScrollViewSize(vc: TabViewController, scrollView: UIScrollView) {
-    if scrollViewInViewController(vc: vc) == nil {
-      internalScrollView.contentSize = CGSize(width: bounds.size.width, height: bounds.size.height)
-      internalScrollView.isScrollEnabled = true
-      internalScrollView.alwaysBounceVertical = false
-      internalScrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
-    } else {
-      internalScrollView.contentSize = bounds.size
-      internalScrollView.isScrollEnabled = false
-      internalScrollView.alwaysBounceVertical = false
-    }
-
-    let constraintValue = headerHeightConstraint?.constant ?? 0
-    let height = max(constraintValue, headerHeight)
-    originalTopInset = height + tabsHeight
-    if #available(iOS 11.0, *) {
-      scrollView.contentInsetAdjustmentBehavior = .never
-    }
-
-    // fixed bottom tabbar inset
-    var bottomInset: CGFloat = 0
-    if containerViewController.tabBarController?.tabBar.isHidden == false {
-      bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0
-    }
-    scrollView.contentInset = UIEdgeInsets(
-      top: originalTopInset,
-      left: CGFloat(0),
-      bottom: bottomInset,
-      right: CGFloat(0)
     )
   }
 
