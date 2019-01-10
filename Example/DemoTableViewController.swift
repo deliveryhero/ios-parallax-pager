@@ -14,36 +14,27 @@ class DemoTableViewController: UITableViewController {
   var numberOfCells = 0
   var shouldUseTemplateCell1 = false
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  // MARK: - Table view data source
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return numberOfCells
+  }
+
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    if shouldUseTemplateCell1 {
+      return tableView.dequeueReusableCell(withIdentifier: "Cell1", for: indexPath)
     }
+    return tableView.dequeueReusableCell(withIdentifier: "Cell2", for: indexPath)
+  }
 
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return numberOfCells
-    }
-
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-      if shouldUseTemplateCell1 {
-        return tableView.dequeueReusableCell(withIdentifier: "Cell1", for: indexPath)
-      }
-      return tableView.dequeueReusableCell(withIdentifier: "Cell2", for: indexPath)
-    }
+  override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    return shouldUseTemplateCell1 ? 100 : 300
+  }
 
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return shouldUseTemplateCell1 ? 100 : 300
@@ -55,9 +46,9 @@ class DemoTableViewController: UITableViewController {
 }
 
 extension DemoTableViewController: ParallaxContentViewController {
-  
+
   func scrollableView() -> UIScrollView? {
-    return self.tableView
+    return tableView
   }
 }
 
