@@ -616,10 +616,9 @@ public final class ParallaxPagerView: UIView {
     }
 
     let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
-    let headerHeightConstant = self.headerHeightConstraint?.constant ?? 0.0
-    if headerHeightConstant != headerHeight,
-       scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
+    if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
       let diff = bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+      let headerHeightConstant = self.headerHeightConstraint?.constant ?? 0.0
       if diff > 0 {
         scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant - diff)
       } else {
@@ -627,7 +626,7 @@ public final class ParallaxPagerView: UIView {
       }
     }
     self.addObserver(for: scrollView)
-    
+
     internalScrollView.setNeedsLayout()
     let duration = animated ? 0.3 : 0.0
     UIView.animate(withDuration: duration, animations: {
