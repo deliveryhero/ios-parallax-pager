@@ -210,8 +210,6 @@ public final class ParallaxPagerView: UIView {
   private func layoutContentViewControllers() {
     if let firstVC = viewControllers.first {
       layoutChildViewController(vc: firstVC, position: 0)
-      internalScrollView.layoutIfNeeded()
-      layoutSubviews()
       let scrollView = scrollViewInViewController(vc: firstVC) ?? internalScrollView
       addObserver(for: scrollView)
       currentDisplayController = firstVC
@@ -520,7 +518,35 @@ public final class ParallaxPagerView: UIView {
 
     let scrollView = scrollViewInViewController(vc: vc) ?? internalScrollView
 
-    updateScrollViewSize(vc: vc, scrollView: scrollView)
+    internalScrollView.contentSize = bounds.size
+    if scrollViewInViewController(vc: vc) == nil {
+      internalScrollView.isScrollEnabled = true
+      internalScrollView.alwaysBounceVertical = false
+      internalScrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
+    } else {
+      internalScrollView.isScrollEnabled = false
+      internalScrollView.alwaysBounceVertical = false
+    }
+
+    let constraintValue = headerHeightConstraint?.constant ?? 0
+    let height = max(constraintValue, headerHeight)
+    originalTopInset = height + tabsHeight
+    if #available(iOS 11.0, *) {
+      scrollView.contentInsetAdjustmentBehavior = .never
+    }
+
+    // fixed bottom tabbar inset
+    var bottomInset: CGFloat = 0
+    if containerViewController.tabBarController?.tabBar.isHidden == false {
+      bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0
+    }
+
+    scrollView.contentInset = UIEdgeInsets(
+      top: originalTopInset,
+      left: CGFloat(0),
+      bottom: bottomInset,
+      right: CGFloat(0)
+    )
 
     if hasShownController.contains(vc) == false {
       hasShownController.add(vc)
@@ -556,38 +582,13 @@ public final class ParallaxPagerView: UIView {
       )
     )
 
-  }
-
-  private func updateScrollViewSize(vc: TabViewController, scrollView: UIScrollView) {
-    if scrollViewInViewController(vc: vc) == nil {
-      internalScrollView.contentSize = CGSize(width: bounds.size.width, height: bounds.size.height)
-      internalScrollView.isScrollEnabled = true
-      internalScrollView.alwaysBounceVertical = false
-      internalScrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
-    } else {
-      internalScrollView.contentSize = bounds.size
-      internalScrollView.isScrollEnabled = false
-      internalScrollView.alwaysBounceVertical = false
+    let diff = view.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+    if diff > 0 {
+      scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
     }
-
-    let constraintValue = headerHeightConstraint?.constant ?? 0
-    let height = max(constraintValue, headerHeight)
-    originalTopInset = height + tabsHeight
-    if #available(iOS 11.0, *) {
-      scrollView.contentInsetAdjustmentBehavior = .never
-    }
-
-    // fixed bottom tabbar inset
-    var bottomInset: CGFloat = 0
-    if containerViewController.tabBarController?.tabBar.isHidden == false {
-      bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0
-    }
-    scrollView.contentInset = UIEdgeInsets(
-      top: originalTopInset,
-      left: CGFloat(0),
-      bottom: bottomInset,
-      right: CGFloat(0)
-    )
+    internalScrollView.setNeedsLayout()
+    internalScrollView.layoutIfNeeded()
+    layoutSubviews()
   }
 
   private func didSelectTabAtIndex(index: Int, previouslySelected: Int, animated: Bool, completion: (() -> Void)? = nil) {
@@ -605,8 +606,6 @@ public final class ParallaxPagerView: UIView {
     let newViewInitialPosition = shouldAnimateLeft ? bounds.size.width : -bounds.size.width
 
     layoutChildViewController(vc: selectedViewController, position: newViewInitialPosition)
-    internalScrollView.setNeedsLayout()
-    internalScrollView.layoutIfNeeded()
 
     if let currentViewConstraints = getPositionConstraints(for: currentDisplayController!.view) {
       currentViewConstraints.forEach { $0.constant = -newViewInitialPosition }
@@ -615,6 +614,19 @@ public final class ParallaxPagerView: UIView {
     if let selectedViewConstraints = getPositionConstraints(for: selectedViewController.view) {
       selectedViewConstraints.forEach { $0.constant = 0.0 }
     }
+
+    let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
+    if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
+      let diff = bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+      let headerHeightConstant = self.headerHeightConstraint?.constant ?? 0.0
+      if diff > 0 {
+        scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant - diff)
+      } else {
+        scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant)
+      }
+    }
+    self.addObserver(for: scrollView)
+
     internalScrollView.setNeedsLayout()
     let duration = animated ? 0.3 : 0.0
     UIView.animate(withDuration: duration, animations: {
@@ -627,24 +639,16 @@ public final class ParallaxPagerView: UIView {
       self.currentDisplayController = selectedViewController
 
       self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
+
       completion?()
     }
-
-    let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
-    let headerHeightConstant = headerHeightConstraint?.constant ?? 0.0
-    if headerHeightConstant != headerHeight {
-      if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
-        scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant)
-      }
-    }
-    addObserver(for: scrollView)
   }
 
   @objc private func swipeDetected(gesture: UISwipeGestureRecognizer) {
-    guard
-      let index = tabsView?.currentSelectedIndex(),
-      gesture.direction == .right || gesture.direction == .left
-      else { return }
+    guard let index = tabsView?.currentSelectedIndex(),
+          gesture.direction == .right || gesture.direction == .left else {
+      return
+    }
 
     let indexToBe = (gesture.direction == .left) ? index + 1 : index - 1
     guard
