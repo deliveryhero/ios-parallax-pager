@@ -344,6 +344,18 @@ public final class ParallaxPagerView: UIView {
 
   private func addObserver(for scrollView: UIScrollView) {
 
+    contentSizeObservarion = scrollView.observe(
+      \.contentSize,
+      options: [.old, .new],
+      changeHandler: { [weak self] scrollView, change in
+        guard let `self` = self, let newValue = change.newValue else { return }
+        let diff = scrollView.bounds.height - newValue.height - self.minimumHeaderHeight - self.tabsHeight
+        if diff > 0 {
+          scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
+        }
+      }
+    )
+
     contentOffsetObservation = scrollView.observe(
       \.contentOffset,
       options: [.old, .new],
@@ -357,18 +369,6 @@ public final class ParallaxPagerView: UIView {
       options: [.old, .new],
       changeHandler: { [weak self] (_, change) in
         self?.contentInsetChanged(change.newValue)
-      }
-    )
-
-    contentSizeObservarion = scrollView.observe(
-      \.contentSize,
-      options: [.old, .new],
-      changeHandler: { [weak self] scrollView, _ in
-        guard let `self` = self else { return }
-        let diff = self.bounds.height - scrollView.contentSize.height - self.minimumHeaderHeight - self.tabsHeight
-        if diff > 0 {
-          scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
-        }
       }
     )
   }
@@ -631,7 +631,7 @@ public final class ParallaxPagerView: UIView {
 
     let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
     if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
-      let diff = bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+      let diff = scrollView.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
       let headerHeightConstant = self.headerHeightConstraint?.constant ?? 0.0
       if diff > 0 {
         scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant - diff)
