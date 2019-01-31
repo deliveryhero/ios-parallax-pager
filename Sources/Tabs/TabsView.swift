@@ -33,8 +33,9 @@ fileprivate class TabView: UIView {
     self.button = UIButton(type: .custom)
     self.tabsView = tabsView
     button.setTitle(title, for: .normal)
-    button.sizeToFit()
     button.setTitleColor(defaultColor, for: .normal)
+    button.titleLabel?.font = selectedFont // -> To get the frame with the bold size first
+    button.sizeToFit()
     button.titleLabel?.font = defaultFont
 
     self.defaultColor = defaultColor
@@ -47,6 +48,7 @@ fileprivate class TabView: UIView {
     let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
     button.addTarget(self, action:#selector(tabClicked), for: .touchUpInside)
+
     addSubview(button)
   }
 

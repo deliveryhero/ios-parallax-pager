@@ -50,7 +50,14 @@ class ViewController: UIViewController {
     let viewController6 = storyboard.instantiateViewController(withIdentifier: "NoScrollVC") as! NoScrollViewController
 
     let viewControllers: [TabViewController] = [viewController1, viewController2, viewController3, viewController4, viewController5, viewController6]
-    let titles = ["View 1", "View 2", "View 3", "View 4", "View 5", "View 6"]
+    let titles = [
+      "Title 1",
+      "Different Title 2",
+      "Long Title 3",
+      "Long Long title 4",
+      "Longer than the long title 5",
+      "The longest title in all the tabs"
+    ]
 
     let tabsConfig = TabsConfig(
       titles: titles,

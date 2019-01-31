@@ -582,7 +582,7 @@ public final class ParallaxPagerView: UIView {
       )
     )
 
-    let diff = view.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+    let diff = self.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
     if diff > 0 {
       scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
     }
