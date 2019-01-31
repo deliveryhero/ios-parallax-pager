@@ -34,6 +34,7 @@ public final class ParallaxPagerView: UIView {
 
   private var contentOffsetObservation: NSKeyValueObservation?
   private var contentInsetObservation: NSKeyValueObservation?
+  private var contentSizeObservarion:  NSKeyValueObservation?
 
   private let containerViewController: UIViewController
 
@@ -358,6 +359,18 @@ public final class ParallaxPagerView: UIView {
         self?.contentInsetChanged(change.newValue)
       }
     )
+
+    contentSizeObservarion = scrollView.observe(
+      \.contentSize,
+      options: [.old, .new],
+      changeHandler: { [weak self] scrollView, _ in
+        guard let `self` = self else { return }
+        let diff = self.bounds.height - scrollView.contentSize.height - self.minimumHeaderHeight - self.tabsHeight
+        if diff > 0 {
+          scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
+        }
+      }
+    )
   }
 
   private func contentOffsetChanged(scrollView: UIScrollView, newOffset: CGPoint?, oldOffset: CGPoint?) {
@@ -430,6 +443,7 @@ public final class ParallaxPagerView: UIView {
   private func invalidateObservations() {
     contentOffsetObservation?.invalidate()
     contentInsetObservation?.invalidate()
+    contentSizeObservarion?.invalidate()
   }
 
   private func scrollViewInViewController(vc: TabViewController) -> UIScrollView? {
@@ -582,7 +596,7 @@ public final class ParallaxPagerView: UIView {
       )
     )
 
-    let diff = self.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
+    let diff = view.bounds.height - scrollView.contentSize.height - minimumHeaderHeight - tabsHeight
     if diff > 0 {
       scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollView.contentSize.height + diff)
     }
