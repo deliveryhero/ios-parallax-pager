@@ -10,20 +10,16 @@ import Foundation
 import UIKit
 
 public struct TabsConfig {
-  let titles: [String]
-
-  let height: CGFloat
-  let tabsPadding: CGFloat
-
-  let tabsShouldBeCentered: Bool
-
-  let defaultTabTitleColor: UIColor
-  let selectedTabTitleColor: UIColor
-  let defaultTabTitleFont: UIFont
-  let selectedTabTitleFont: UIFont
-
-  let selectionIndicatorHeight: CGFloat
-  let selectionIndicatorColor: UIColor
+  public let titles: [String]
+  public let height: CGFloat
+  public let tabsPadding: CGFloat
+  public let tabsShouldBeCentered: Bool
+  public let defaultTabTitleColor: UIColor
+  public let selectedTabTitleColor: UIColor
+  public let defaultTabTitleFont: UIFont
+  public let selectedTabTitleFont: UIFont
+  public let selectionIndicatorHeight: CGFloat
+  public let selectionIndicatorColor: UIColor
 
   public init(
     titles: [String],
