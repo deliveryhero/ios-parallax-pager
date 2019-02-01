@@ -33,6 +33,7 @@ fileprivate class TabView: UIView {
     self.button = UIButton(type: .custom)
     self.tabsView = tabsView
     button.setTitle(title, for: .normal)
+    button.titleLabel?.font = selectedFont // -> to always fit selected
     button.sizeToFit()
     button.setTitleColor(defaultColor, for: .normal)
     button.titleLabel?.font = defaultFont
