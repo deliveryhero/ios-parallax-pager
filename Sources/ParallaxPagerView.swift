@@ -40,6 +40,7 @@ public final class ParallaxPagerView: UIView {
   private var headerHeightConstraint: NSLayoutConstraint?
   private var contentViewLeadingConstraint: NSLayoutConstraint?
   private var contentViewTrailingConstraint: NSLayoutConstraint?
+  private var tabsHeightConstraint: NSLayoutConstraint?
 
   private var leftSwipeGestureRecognizer: UISwipeGestureRecognizer?
   private var rightSwipeGestureRecognizer: UISwipeGestureRecognizer?
@@ -185,6 +186,18 @@ public final class ParallaxPagerView: UIView {
     }
   }
 
+  public func setTabsHeight(_ height: CGFloat, animated: Bool = false) {
+    guard
+      let currentDisplayController = currentDisplayController,
+      let currentScrollView = scrollViewInViewController(vc: currentDisplayController),
+      let constraint = tabsHeightConstraint, height >= 0
+    else { return }
+    tabsHeight = height
+    constraint.constant = tabsHeight
+    let headerHeightConstant = headerHeightConstraint?.constant ?? 0.0
+    currentScrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant)
+  }
+
   @available(iOSApplicationExtension 9.0, *)
   private func layoutInternalScrollView() {
     insertSubview(internalScrollView, at: 0)
@@ -315,17 +328,16 @@ public final class ParallaxPagerView: UIView {
       )
     )
 
-    tabsView.addConstraint(
-      NSLayoutConstraint(
-        item: tabsView,
-        attribute: .height,
-        relatedBy: .equal,
-        toItem: nil,
-        attribute: .notAnAttribute,
-        multiplier: 1.0,
-        constant: tabsHeight
-      )
+    tabsHeightConstraint = NSLayoutConstraint(
+      item: tabsView,
+      attribute: .height,
+      relatedBy: .equal,
+      toItem: nil,
+      attribute: .notAnAttribute,
+      multiplier: 1.0,
+      constant: tabsHeight
     )
+    tabsView.addConstraint(tabsHeightConstraint!)
   }
 
   private func shouldIgnoreOffsetUpdate(
