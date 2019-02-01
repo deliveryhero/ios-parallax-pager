@@ -346,7 +346,6 @@ public final class ParallaxPagerView: UIView {
 
   private func addObserver(for scrollView: UIScrollView) {
 
-
     contentOffsetObservation = scrollView.observe(
       \.contentOffset,
       options: [.old, .new],
@@ -588,7 +587,10 @@ public final class ParallaxPagerView: UIView {
       bottom: bottomInset,
       right: CGFloat(0)
     )
+    applyMinimumContentHeight(for: scrollView)
+  }
 
+  private func applyMinimumContentHeight(for scrollView: UIScrollView) {
     let contentHeight = scrollView.contentSize.height
     let minimumContentHeight = self.bounds.size.height - self.minimumHeaderHeight - self.tabsHeight
     if contentHeight < minimumContentHeight {
@@ -635,11 +637,7 @@ public final class ParallaxPagerView: UIView {
       self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
 
       let scrollView = self.scrollViewInViewController(vc: selectedViewController) ?? self.internalScrollView
-      let contentHeight = scrollView.contentSize.height
-      let minimumContentHeight = self.bounds.size.height - self.minimumHeaderHeight - self.tabsHeight
-      if contentHeight < minimumContentHeight {
-        scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: minimumContentHeight)
-      }
+      self.applyMinimumContentHeight(for: scrollView)
       completion?()
     }
 
