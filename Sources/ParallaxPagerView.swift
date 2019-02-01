@@ -134,7 +134,7 @@ public final class ParallaxPagerView: UIView {
     pagerDelegate: PagerDelegate? = nil,
     animated: Bool,
     completion: (() -> Void)? = nil
-  ) {
+    ) {
 
     self.pagerDelegate = pagerDelegate
     self.tabsView = tabsView
@@ -176,10 +176,10 @@ public final class ParallaxPagerView: UIView {
     let heightToBe = headerHeightConstraint?.constant ?? 0 + heightDiff
     if heightToBe > minimumHeaderHeight {
       headerHeightConstraint?.constant = heightToBe
-      guard let currentDisplayController = currentDisplayController,
-            let currentScrollView = scrollViewInViewController(vc: currentDisplayController) else {
-        return
-      }
+      guard
+        let currentDisplayController = currentDisplayController,
+        let currentScrollView = scrollViewInViewController(vc: currentDisplayController)
+      else { return }
       let offsetToBe = currentScrollView.contentOffset.y - heightDiff
       currentScrollView.setContentOffset(CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe), animated: animated)
     }
@@ -209,10 +209,11 @@ public final class ParallaxPagerView: UIView {
 
   private func layoutContentViewControllers() {
     if let firstVC = viewControllers.first {
+      let scrollView = scrollViewInViewController(vc: firstVC) ?? internalScrollView
       layoutChildViewController(vc: firstVC, position: 0)
       internalScrollView.layoutIfNeeded()
       layoutSubviews()
-      let scrollView = scrollViewInViewController(vc: firstVC) ?? internalScrollView
+
       addObserver(for: scrollView)
       currentDisplayController = firstVC
     }
@@ -447,9 +448,8 @@ public final class ParallaxPagerView: UIView {
     return internalScrollView.constraints.filter { (constraint) -> Bool in
       guard
         let firstItem = constraint.firstItem as? NSObject,
-        let secondItem = constraint.secondItem as? NSObject else {
-        return false
-      }
+        let secondItem = constraint.secondItem as? NSObject
+      else { return false }
       return (constraint.firstAttribute == .right &&
         constraint.secondAttribute == .right &&
         firstItem == view &&
@@ -555,7 +555,6 @@ public final class ParallaxPagerView: UIView {
         constant: 0.0
       )
     )
-
   }
 
   private func updateScrollViewSize(vc: TabViewController, scrollView: UIScrollView) {
@@ -588,6 +587,15 @@ public final class ParallaxPagerView: UIView {
       bottom: bottomInset,
       right: CGFloat(0)
     )
+    applyMinimumContentHeight(for: scrollView)
+  }
+
+  private func applyMinimumContentHeight(for scrollView: UIScrollView) {
+    let contentHeight = scrollView.contentSize.height
+    let minimumContentHeight = self.bounds.size.height - self.minimumHeaderHeight - self.tabsHeight
+    if contentHeight < minimumContentHeight {
+      scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: minimumContentHeight)
+    }
   }
 
   private func didSelectTabAtIndex(index: Int, previouslySelected: Int, animated: Bool, completion: (() -> Void)? = nil) {
@@ -627,15 +635,16 @@ public final class ParallaxPagerView: UIView {
       self.currentDisplayController = selectedViewController
 
       self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
+
+      let scrollView = self.scrollViewInViewController(vc: selectedViewController) ?? self.internalScrollView
+      self.applyMinimumContentHeight(for: scrollView)
       completion?()
     }
 
     let scrollView = scrollViewInViewController(vc: selectedViewController) ?? internalScrollView
     let headerHeightConstant = headerHeightConstraint?.constant ?? 0.0
-    if headerHeightConstant != headerHeight {
-      if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
-        scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant)
-      }
+    if scrollView.contentOffset.y >= -(tabsHeight + headerHeight) && scrollView.contentOffset.y <= -tabsHeight {
+      scrollView.contentOffset = CGPoint(x: 0.0, y: -tabsHeight - headerHeightConstant)
     }
     addObserver(for: scrollView)
   }
