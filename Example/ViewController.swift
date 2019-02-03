@@ -78,7 +78,7 @@ class ViewController: UIViewController {
     )
     view.addSubview(parallaxView)
 
-    Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (_) in
+    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] (_) in
       guard let `self` = self else { return }
       self.parallaxView.setupPager(
         with: viewControllers,
@@ -86,8 +86,11 @@ class ViewController: UIViewController {
         pagerDelegate: self as? PagerDelegate,
         animated: true,
         completion: {
-          self.headerHeight += 100
-          self.parallaxView.setHeaderHeight(self.headerHeight, animated: true)
+          self.parallaxView.addHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
+          let duration = DispatchTime.now() + DispatchTimeInterval.seconds(3)
+          DispatchQueue.main.asyncAfter(deadline: duration, execute: {
+            self.parallaxView.removeHeader()
+          })
         }
       )
     }

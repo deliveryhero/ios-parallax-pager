@@ -28,7 +28,7 @@ fileprivate class TabView: UIView {
     selectedFont: UIFont,
     height: CGFloat,
     tabsView: TabsView
-    ) {
+  ) {
     self.index = index
     self.button = UIButton(type: .custom)
     self.tabsView = tabsView
@@ -47,7 +47,7 @@ fileprivate class TabView: UIView {
     let buttonFrame = button.frame
     let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
-    button.addTarget(self, action:#selector(tabClicked), for: .touchUpInside)
+    button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
     addSubview(button)
   }
 
@@ -78,23 +78,33 @@ fileprivate class TabView: UIView {
 
 class TabsView: UIView {
 
-  public var onSelectedTabChanging:(_ oldTab: Int, _ newTab: Int) -> Void = {_, _ in }
+  public var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void = { _, _ in }
 
+
+  @IBOutlet weak var tabsHeaderHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var tabsHeaderContainerView: UIView!
   @IBOutlet fileprivate weak var scrollView: UIScrollView!
   @IBOutlet fileprivate weak var scrollViewWidthConstraint: NSLayoutConstraint!
-  fileprivate  let selectionIndicatorView = UIView()
+  fileprivate let selectionIndicatorView = UIView()
   fileprivate var tabsConfig: TabsConfig!
-  fileprivate  var tabsList = [TabView]()
+  fileprivate var tabsList = [TabView]()
   private(set) var selectedIndex: Int = 0
 
+  private(set) var tabsHeaderView: UIView?
+
   static func tabsView(with config: TabsConfig) -> TabsView {
-    let bundle = Bundle(identifier:"com.ParallaxPagerView.ParallaxPagerView-iOS")
+    let bundle = Bundle(identifier: "com.ParallaxPagerView.ParallaxPagerView-iOS")
     let tabsView = bundle!.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
     tabsView.tabsConfig = config
     tabsView.frame = CGRect(x: 0, y: 0, width: tabsView.frame.size.width, height: config.height)
     tabsView.createTabs()
     tabsView.setupSelectionIndicator()
     return tabsView
+  }
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    tabsHeaderHeightConstraint.constant = 0
   }
 
   private func setupSelectionIndicator() {
@@ -163,7 +173,7 @@ class TabsView: UIView {
       width: selectedTabFrame.size.width,
       height: tabsConfig.selectionIndicatorHeight
     )
-    UIView.animate(withDuration: 0.3) {[weak self] in
+    UIView.animate(withDuration: 0.3) { [weak self] in
       self?.selectionIndicatorView.frame = frame
     }
   }
@@ -192,6 +202,30 @@ class TabsView: UIView {
 }
 
 extension TabsView: PagerTab {
+
+  func addHeader(_ headerView: UIView) {
+    guard headerView.superview != tabsHeaderContainerView else {
+      return
+    }
+
+    tabsHeaderHeightConstraint.constant = headerView.frame.size.height
+    headerView.frame = tabsHeaderContainerView.bounds
+    tabsHeaderContainerView.addSubview(headerView)
+    translatesAutoresizingMaskIntoConstraints = false
+    headerView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+    headerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+    headerView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    headerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+
+    tabsHeaderContainerView.clipsToBounds = true
+    layoutSubviews()
+    tabsHeaderView = headerView
+  }
+
+  func removeHeader() {
+    tabsHeaderView?.removeFromSuperview()
+    tabsHeaderHeightConstraint.constant = 0
+  }
 
   public func currentSelectedIndex() -> Int {
     return selectedIndex

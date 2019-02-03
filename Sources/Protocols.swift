@@ -24,7 +24,9 @@ public protocol PagerDelegate {
 }
 
 public protocol PagerTab {
-  var onSelectedTabChanging:(_ oldTab: Int, _ newTab: Int) -> Void { set get }
+  var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void { set get }
+  func addHeader(_ headerView: UIView)
+  func removeHeader()
   func currentSelectedIndex() -> Int
   func numberOfTabs() -> Int
   func setSelectedTab(at index: Int)
