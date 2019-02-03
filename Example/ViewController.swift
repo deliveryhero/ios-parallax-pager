@@ -86,10 +86,10 @@ class ViewController: UIViewController {
         pagerDelegate: self as? PagerDelegate,
         animated: true,
         completion: {
-          self.parallaxView.addHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
+          self.parallaxView.addTabsHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
           let duration = DispatchTime.now() + DispatchTimeInterval.seconds(3)
           DispatchQueue.main.asyncAfter(deadline: duration, execute: {
-            self.parallaxView.removeHeader()
+            self.parallaxView.removeTabsHeader()
           })
         }
       )

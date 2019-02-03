@@ -188,12 +188,12 @@ public final class ParallaxPagerView: UIView {
     }
   }
 
-  public func addHeader(_ headerView: UIView) {
+  public func addTabsHeader(_ headerView: UIView) {
     setTabsHeight(initialTabsHeight + headerView.frame.height, animated: true)
     tabsView?.addHeader(headerView)
   }
 
-  public func removeHeader() {
+  public func removeTabsHeader() {
     tabsView?.removeHeader()
     setTabsHeight(initialTabsHeight, animated: true)
   }
