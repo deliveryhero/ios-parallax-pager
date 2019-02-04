@@ -26,6 +26,7 @@ fileprivate class TabView: UIView {
     selectedColor: UIColor,
     defaultFont: UIFont,
     selectedFont: UIFont,
+    horizontalInsets: CGFloat,
     height: CGFloat,
     tabsView: TabsView
   ) {
@@ -34,6 +35,7 @@ fileprivate class TabView: UIView {
     self.tabsView = tabsView
     button.setTitle(title, for: .normal)
     button.titleLabel?.font = selectedFont // -> to always fit selected
+    button.contentEdgeInsets = UIEdgeInsets(top: 0, left: horizontalInsets, bottom: 0, right: horizontalInsets)
     button.sizeToFit()
     button.setTitleColor(defaultColor, for: .normal)
     button.titleLabel?.font = defaultFont
@@ -117,6 +119,7 @@ public class TabsView: UIView {
         selectedColor: tabsConfig.selectedTabTitleColor,
         defaultFont: tabsConfig.defaultTabTitleFont,
         selectedFont: tabsConfig.selectedTabTitleFont,
+        horizontalInsets: tabsConfig.horizontalTabTitleInsets,
         height: self.frame.size.height,
         tabsView: self
       )

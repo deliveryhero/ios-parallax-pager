@@ -18,6 +18,7 @@ public struct TabsConfig {
   public let selectedTabTitleColor: UIColor
   public let defaultTabTitleFont: UIFont
   public let selectedTabTitleFont: UIFont
+  public let horizontalTabTitleInsets: CGFloat
   public let selectionIndicatorHeight: CGFloat
   public let selectionIndicatorColor: UIColor
 
@@ -30,6 +31,7 @@ public struct TabsConfig {
     selectedTabTitleColor: UIColor,
     defaultTabTitleFont: UIFont,
     selectedTabTitleFont: UIFont,
+    horizontalTabTitleInsets: CGFloat,
     selectionIndicatorHeight: CGFloat,
     selectionIndicatorColor: UIColor
     ) {
@@ -41,6 +43,7 @@ public struct TabsConfig {
     self.selectedTabTitleColor = selectedTabTitleColor
     self.defaultTabTitleFont = defaultTabTitleFont
     self.selectedTabTitleFont = selectedTabTitleFont
+    self.horizontalTabTitleInsets = horizontalTabTitleInsets
     self.selectionIndicatorHeight = selectionIndicatorHeight
     self.selectionIndicatorColor = selectionIndicatorColor
   }
