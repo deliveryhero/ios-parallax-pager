@@ -201,8 +201,10 @@ public final class ParallaxPagerView: UIView {
     insets.top = originalTopInset
     offset.y -= diff
     ignoreOffsetChanged = true
-    scrollView.contentInset = insets    
+    scrollView.contentInset = insets
+    ignoreOffsetChanged = true
     scrollView.contentOffset = offset
+    ignoreOffsetChanged = false
     applyMinimumContentHeight(for: scrollView)
   }
 
