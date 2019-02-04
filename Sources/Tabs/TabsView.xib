@@ -15,27 +15,17 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="172"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IaY-Vn-q7T" userLabel="Header View">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="34"/>
-                    <color key="backgroundColor" red="0.9844183326" green="0.21014556940000001" blue="0.45029433419999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="34" id="uXk-D4-wEO"/>
-                    </constraints>
-                </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n1r-Wd-YDF">
-                    <rect key="frame" x="0.0" y="34" width="375" height="138"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="172"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </scrollView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="IaY-Vn-q7T" secondAttribute="trailing" id="JB8-ii-9Of"/>
                 <constraint firstItem="n1r-Wd-YDF" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="JhT-BR-54M"/>
                 <constraint firstAttribute="bottom" secondItem="n1r-Wd-YDF" secondAttribute="bottom" id="Kbb-iF-m30"/>
                 <constraint firstItem="n1r-Wd-YDF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Nwv-h6-mHY"/>
-                <constraint firstItem="n1r-Wd-YDF" firstAttribute="top" secondItem="IaY-Vn-q7T" secondAttribute="bottom" id="eZX-qK-kWu"/>
-                <constraint firstItem="IaY-Vn-q7T" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="r6i-tZ-GJO"/>
-                <constraint firstItem="IaY-Vn-q7T" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="rCA-uO-zW8"/>
+                <constraint firstItem="n1r-Wd-YDF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="R88-MJ-SXE"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
@@ -43,8 +33,6 @@
             <connections>
                 <outlet property="scrollView" destination="n1r-Wd-YDF" id="MEs-K7-nw6"/>
                 <outlet property="scrollViewWidthConstraint" destination="JhT-BR-54M" id="zUZ-CG-bFW"/>
-                <outlet property="tabsHeaderContainerView" destination="IaY-Vn-q7T" id="wbR-il-8bz"/>
-                <outlet property="tabsHeaderHeightConstraint" destination="uXk-D4-wEO" id="YA3-Wa-25b"/>
             </connections>
             <point key="canvasLocation" x="-850.39999999999998" y="-985.00749625187416"/>
         </view>

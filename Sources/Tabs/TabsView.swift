@@ -76,23 +76,21 @@ fileprivate class TabView: UIView {
   }
 }
 
-class TabsView: UIView {
+public class TabsView: UIView {
 
   public var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void = { _, _ in }
 
-
-  @IBOutlet weak var tabsHeaderHeightConstraint: NSLayoutConstraint!
-  @IBOutlet weak var tabsHeaderContainerView: UIView!
   @IBOutlet fileprivate weak var scrollView: UIScrollView!
   @IBOutlet fileprivate weak var scrollViewWidthConstraint: NSLayoutConstraint!
   fileprivate let selectionIndicatorView = UIView()
   fileprivate var tabsConfig: TabsConfig!
   fileprivate var tabsList = [TabView]()
-  private(set) var selectedIndex: Int = 0
 
+  private(set) var selectedIndex: Int = 0
   private(set) var tabsHeaderView: UIView?
 
-  static func tabsView(with config: TabsConfig) -> TabsView {
+  public static func tabsView(with config: TabsConfig) -> TabsView {
+
     let bundle = Bundle(identifier: "com.ParallaxPagerView.ParallaxPagerView-iOS")
     let tabsView = bundle!.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
     tabsView.tabsConfig = config
@@ -100,11 +98,6 @@ class TabsView: UIView {
     tabsView.createTabs()
     tabsView.setupSelectionIndicator()
     return tabsView
-  }
-
-  override func awakeFromNib() {
-    super.awakeFromNib()
-    tabsHeaderHeightConstraint.constant = 0
   }
 
   private func setupSelectionIndicator() {
@@ -202,30 +195,6 @@ class TabsView: UIView {
 }
 
 extension TabsView: PagerTab {
-
-  func addHeader(_ headerView: UIView) {
-    guard headerView.superview != tabsHeaderContainerView else {
-      return
-    }
-
-    tabsHeaderHeightConstraint.constant = headerView.frame.size.height
-    headerView.frame = tabsHeaderContainerView.bounds
-    tabsHeaderContainerView.addSubview(headerView)
-    translatesAutoresizingMaskIntoConstraints = false
-    headerView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-    headerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-    headerView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-    headerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-
-    tabsHeaderContainerView.clipsToBounds = true
-    layoutSubviews()
-    tabsHeaderView = headerView
-  }
-
-  func removeHeader() {
-    tabsHeaderView?.removeFromSuperview()
-    tabsHeaderHeightConstraint.constant = 0
-  }
 
   public func currentSelectedIndex() -> Int {
     return selectedIndex
