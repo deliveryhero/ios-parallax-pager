@@ -12,7 +12,6 @@ import UIKit
 public final class ParallaxPagerView: UIView {
 
   private var tabsHeight: CGFloat = 0
-  private var initialTabsHeight: CGFloat = 0
   private var headerHeight: CGFloat
   private let minimumHeaderHeight: CGFloat
 
@@ -46,8 +45,6 @@ public final class ParallaxPagerView: UIView {
   private var rightSwipeGestureRecognizer: UISwipeGestureRecognizer?
 
   private var internalScrollView: UIScrollView
-
-  private var tabsViewConfig: TabsConfig?
 
   public init(
     containerViewController: UIViewController,
@@ -91,7 +88,6 @@ public final class ParallaxPagerView: UIView {
     self.scaleHeaderOnBounce = scaleHeaderOnBounce
     self.tabsView = tabsView
     self.tabsHeight = tabsView.frame.size.height
-    self.initialTabsHeight = tabsView.frame.size.height
     self.viewControllers = viewControllers
     self.parallaxDelegate = parallaxDelegate
     self.pagerDelegate = pagerDelegate
@@ -142,7 +138,6 @@ public final class ParallaxPagerView: UIView {
     self.pagerDelegate = pagerDelegate
     self.tabsView = tabsView
     tabsHeight = tabsView.frame.size.height
-    initialTabsHeight = tabsView.frame.size.height
     initialLayoutTabsView()
     self.viewControllers = viewControllers
     internalScrollView.alpha = 0.0
