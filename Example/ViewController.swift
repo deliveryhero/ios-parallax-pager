@@ -70,6 +70,7 @@ class ViewController: UIViewController {
       selectedTabTitleColor: .black,
       defaultTabTitleFont: UIFont.systemFont(ofSize: 15.0),
       selectedTabTitleFont: UIFont.boldSystemFont(ofSize: 15.0),
+      horizontalTabTitleInsets: 5.0,
       selectionIndicatorHeight: 2.0,
       selectionIndicatorColor: .blue
     )
