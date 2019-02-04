@@ -11,19 +11,28 @@ import ParallaxPagerView
 
 class ViewController: UIViewController {
 
+  var containerView: ContainerView?
   var headerHeight: CGFloat = 300
   var parallaxView: ParallaxPagerView!
   @IBOutlet weak var buttonsView: UIView!
 
   @IBAction func plusClicked(_ sender: Any) {
-    headerHeight += 30
-    parallaxView.setHeaderHeight(headerHeight, animated: true)
+    //headerHeight += 30
+
+    //parallaxView.setHeaderHeight(headerHeight, animated: true)
+
+//    self.parallaxView.addTabsHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
+    containerView?.showBanner()
+    parallaxView.setTabsHeight(100)
   }
 
   @IBAction func minusClicked(_ sender: Any) {
     guard headerHeight > 0 else { return }
-    headerHeight -= 30
-    parallaxView.setHeaderHeight(headerHeight, animated: true)
+    // headerHeight -= 30
+//    parallaxView.setHeaderHeight(headerHeight, animated: true)
+//    self.parallaxView.removeTabsHeader()
+    containerView?.hideBanner()
+    parallaxView.setTabsHeight(50)
   }
 
   override func viewDidLoad() {
@@ -78,16 +87,25 @@ class ViewController: UIViewController {
     )
     view.addSubview(parallaxView)
 
+    let tabsView = TabsView.tabsView(with: tabsConfig)
+    let containerView = ContainerView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50), tabsView: tabsView)
+    self.containerView = containerView
     Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (_) in
       guard let `self` = self else { return }
       self.parallaxView.setupPager(
         with: viewControllers,
-        tabsViewConfig: tabsConfig,
+        tabsView: containerView,
         pagerDelegate: self as? PagerDelegate,
         animated: true,
         completion: {
-          self.headerHeight += 100
-          self.parallaxView.setHeaderHeight(self.headerHeight, animated: true)
+//          self.headerHeight += 100
+//          self.parallaxView.setHeaderHeight(self.headerHeight, animated: true)
+//          self.para
+//          let duration = DispatchTime.now() + DispatchTimeInterval.seconds(3)
+//          DispatchQueue.main.asyncAfter(deadline: duration, execute: {
+//            containerView.hideBanner()
+//            self.parallaxView.setTabsHeight(50)
+//          })
         }
       )
     }
@@ -101,5 +119,53 @@ class ViewController: UIViewController {
 extension ViewController: ParallaxViewDelegate {
   func parallaxViewDidScrollBy(percentage: CGFloat, oldOffset: CGPoint, newOffset: CGPoint) {
 
+  }
+}
+
+class ContainerView: UIView, PagerTab {
+  var tabsView: TabsView
+
+  init(frame: CGRect, tabsView: TabsView) {
+    tabsView.frame = CGRect(x: 0, y: 0, width: frame.width, height: tabsView.frame.height)
+    self.tabsView = tabsView
+    self.onSelectedTabChanging = { oldTab, newTab in
+      tabsView.onSelectedTabChanging(oldTab, newTab)
+    }
+    super.init(frame: frame)
+    addSubview(tabsView)
+    backgroundColor = .red
+    clipsToBounds = true
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    fatalError()
+  }
+
+  func hideBanner() {
+    self.tabsView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: tabsView.frame.height)
+    self.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: tabsView.frame.height)
+  }
+
+  func showBanner() {
+    self.tabsView.frame = CGRect(x: 0, y: 50, width: self.frame.width, height: tabsView.frame.height)
+    self.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: tabsView.frame.height + 50)
+  }
+
+  var onSelectedTabChanging: (Int, Int) -> Void = { _, _ in } {
+    didSet {
+      tabsView.onSelectedTabChanging = onSelectedTabChanging
+    }
+  }
+
+  func currentSelectedIndex() -> Int {
+    return tabsView.currentSelectedIndex()
+  }
+
+  func numberOfTabs() -> Int {
+    return tabsView.numberOfTabs()
+  }
+
+  func setSelectedTab(at index: Int) {
+    tabsView.setSelectedTab(at: index)
   }
 }
