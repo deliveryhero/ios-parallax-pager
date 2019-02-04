@@ -203,8 +203,22 @@ public final class ParallaxPagerView: UIView {
           height >= 0 else {
       return
     }
+    let diff = height - tabsHeight
     tabsHeight = height
     constraint.constant = tabsHeight
+
+    guard let vc = currentDisplayController else { return }
+    let scrollView = scrollViewInViewController(vc: vc) ?? internalScrollView
+    originalTopInset += diff
+
+    var offset = scrollView.contentOffset
+    var insets = scrollView.contentInset
+    insets.top = originalTopInset
+    offset.y -= diff
+    ignoreOffsetChanged = true
+    scrollView.contentInset = insets    
+    scrollView.contentOffset = offset
+    applyMinimumContentHeight(for: scrollView)
   }
 
   private func layoutInternalScrollView() {

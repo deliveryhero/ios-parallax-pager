@@ -16,14 +16,18 @@ class ViewController: UIViewController {
   @IBOutlet weak var buttonsView: UIView!
 
   @IBAction func plusClicked(_ sender: Any) {
-    headerHeight += 30
-    parallaxView.setHeaderHeight(headerHeight, animated: true)
+    //headerHeight += 30
+    
+    //parallaxView.setHeaderHeight(headerHeight, animated: true)
+
+    self.parallaxView.addTabsHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
   }
 
   @IBAction func minusClicked(_ sender: Any) {
     guard headerHeight > 0 else { return }
-    headerHeight -= 30
-    parallaxView.setHeaderHeight(headerHeight, animated: true)
+   // headerHeight -= 30
+//    parallaxView.setHeaderHeight(headerHeight, animated: true)
+    self.parallaxView.removeTabsHeader()
   }
 
   override func viewDidLoad() {
@@ -86,6 +90,8 @@ class ViewController: UIViewController {
         pagerDelegate: self as? PagerDelegate,
         animated: true,
         completion: {
+          self.headerHeight += 100
+          self.parallaxView.setHeaderHeight(self.headerHeight)
           self.parallaxView.addTabsHeader(UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100)))
           let duration = DispatchTime.now() + DispatchTimeInterval.seconds(3)
           DispatchQueue.main.asyncAfter(deadline: duration, execute: {
