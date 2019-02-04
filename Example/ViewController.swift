@@ -168,11 +168,4 @@ class ContainerView: UIView, PagerTab {
   func setSelectedTab(at index: Int) {
     tabsView.setSelectedTab(at: index)
   }
-
-  func addHeader(_ headerView: UIView) {
-
-  }
-
-  func removeHeader() {
-  }
 }
