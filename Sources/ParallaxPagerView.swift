@@ -17,7 +17,7 @@ public final class ParallaxPagerView: UIView {
 
   private var originalTopInset: CGFloat = 0
 
-  private var headerView = UIView()
+  public private(set) var headerView = UIView()
   public private(set) var tabsView: (UIView & PagerTab)?
 
   private var viewControllers = [TabViewController]()
