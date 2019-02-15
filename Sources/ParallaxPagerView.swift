@@ -215,7 +215,6 @@ public final class ParallaxPagerView: UIView {
     internalScrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
     internalScrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
     internalScrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-    internalScrollView.bounces = scaleHeaderOnBounce
   }
 
   private func baseConfig() {
@@ -594,7 +593,7 @@ public final class ParallaxPagerView: UIView {
 
     let constraintValue = headerHeightConstraint?.constant ?? 0
     let height = max(constraintValue, headerHeight)
-    originalTopInset = height + tabsHeight
+    originalTopInset = scrollView.contentInset.top + height + tabsHeight
     if #available(iOS 11.0, *) {
       scrollView.contentInsetAdjustmentBehavior = .never
     }
@@ -606,9 +605,9 @@ public final class ParallaxPagerView: UIView {
     }
     scrollView.contentInset = UIEdgeInsets(
       top: originalTopInset,
-      left: CGFloat(0),
-      bottom: bottomInset,
-      right: CGFloat(0)
+      left: scrollView.contentInset.left,
+      bottom: bottomInset + scrollView.contentInset.bottom,
+      right: scrollView.contentInset.right
     )
     applyMinimumContentHeight(for: scrollView)
   }
