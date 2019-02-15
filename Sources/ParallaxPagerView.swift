@@ -215,6 +215,7 @@ public final class ParallaxPagerView: UIView {
     internalScrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
     internalScrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
     internalScrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+    internalScrollView.bounces = scaleHeaderOnBounce
   }
 
   private func baseConfig() {
