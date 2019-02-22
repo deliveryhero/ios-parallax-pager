@@ -233,9 +233,12 @@ public final class ParallaxPagerView: UIView {
   }
 
   private func updateTopInset(for scrollView: UIScrollView, with delta: CGFloat) {
+    let offset = scrollView.contentOffset
     var insets = scrollView.contentInset
     insets.top += delta
     scrollView.contentInset = insets
+    guard scrollView != internalScrollView else { return }
+    scrollView.contentOffset = offset
   }
 
   private func layoutContentViewControllers() {
