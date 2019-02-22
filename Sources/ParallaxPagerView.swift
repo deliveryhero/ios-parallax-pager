@@ -171,16 +171,21 @@ public final class ParallaxPagerView: UIView {
 
     let heightDiff = height - headerHeight
     headerHeight = height
-    layoutContentViewControllers()
-    let heightToBe = headerHeightConstraint?.constant ?? 0 + heightDiff
+    originalTopInset += heightDiff
+    let heightToBe = (headerHeightConstraint?.constant ?? 0) + heightDiff
+    guard let currentDisplayController = currentDisplayController else { return }
+    let scrollView = scrollViewInViewController(vc: currentDisplayController) ?? internalScrollView
+    var offset = scrollView.contentOffset
+    ignoreOffsetChanged = true
+    updateTopInset(for: scrollView, with: heightDiff)
+    applyMinimumContentHeight(for: scrollView)
     if heightToBe > minimumHeaderHeight {
       headerHeightConstraint?.constant = heightToBe
-      guard let currentDisplayController = currentDisplayController,
-            let currentScrollView = scrollViewInViewController(vc: currentDisplayController)
-        else { return }
-      let offsetToBe = currentScrollView.contentOffset.y - heightDiff
-      currentScrollView.setContentOffset(CGPoint(x: internalScrollView.contentOffset.x, y: offsetToBe), animated: animated)
+      offset.y -= heightDiff
     }
+    ignoreOffsetChanged = true
+    scrollView.contentOffset = offset
+    ignoreOffsetChanged = false
   }
 
   public func setTabsHeight(_ height: CGFloat, animated: Bool = false) {
@@ -191,17 +196,15 @@ public final class ParallaxPagerView: UIView {
     let diff = height - tabsHeight
     tabsHeight = height
     constraint.constant = tabsHeight
+    originalTopInset += diff
 
     guard let vc = currentDisplayController else { return }
     let scrollView = scrollViewInViewController(vc: vc) ?? internalScrollView
-    originalTopInset += diff
 
     var offset = scrollView.contentOffset
-    var insets = scrollView.contentInset
-    insets.top = originalTopInset
     offset.y -= diff
     ignoreOffsetChanged = true
-    scrollView.contentInset = insets
+    updateTopInset(for: scrollView, with: diff)
     ignoreOffsetChanged = true
     scrollView.contentOffset = offset
     ignoreOffsetChanged = false
@@ -227,6 +230,15 @@ public final class ParallaxPagerView: UIView {
 
     headerView.clipsToBounds = true
     addSubview(headerView)
+  }
+
+  private func updateTopInset(for scrollView: UIScrollView, with delta: CGFloat) {
+    let offset = scrollView.contentOffset
+    var insets = scrollView.contentInset
+    insets.top += delta
+    scrollView.contentInset = insets
+    guard scrollView != internalScrollView else { return }
+    scrollView.contentOffset = offset
   }
 
   private func layoutContentViewControllers() {
@@ -542,6 +554,10 @@ public final class ParallaxPagerView: UIView {
 
     let scrollView = scrollViewInViewController(vc: vc) ?? internalScrollView
 
+    let constraintValue = headerHeightConstraint?.constant ?? 0
+    let height = max(constraintValue, headerHeight)
+    originalTopInset = height + tabsHeight
+    updateTopInset(for: scrollView, with: originalTopInset)
     updateScrollViewSize(vc: vc, scrollView: scrollView)
 
     if hasShownController.contains(vc) == false {
@@ -591,24 +607,9 @@ public final class ParallaxPagerView: UIView {
       internalScrollView.alwaysBounceVertical = false
     }
 
-    let constraintValue = headerHeightConstraint?.constant ?? 0
-    let height = max(constraintValue, headerHeight)
-    originalTopInset = scrollView.contentInset.top + height + tabsHeight
     if #available(iOS 11.0, *) {
       scrollView.contentInsetAdjustmentBehavior = .never
     }
-
-    // fixed bottom tabbar inset
-    var bottomInset: CGFloat = 0
-    if containerViewController.tabBarController?.tabBar.isHidden == false {
-      bottomInset = containerViewController.tabBarController?.tabBar.bounds.size.height ?? 0
-    }
-    scrollView.contentInset = UIEdgeInsets(
-      top: originalTopInset,
-      left: scrollView.contentInset.left,
-      bottom: bottomInset + scrollView.contentInset.bottom,
-      right: scrollView.contentInset.right
-    )
     applyMinimumContentHeight(for: scrollView)
   }
 
@@ -650,10 +651,15 @@ public final class ParallaxPagerView: UIView {
     UIView.animate(withDuration: duration, animations: {
       self.internalScrollView.layoutIfNeeded()
     }) { _ in
-      self.currentDisplayController?.willMove(toParent: nil)
-      self.currentDisplayController?.view.removeFromSuperview()
-      self.currentDisplayController?.removeFromParent()
-      self.currentDisplayController?.didMove(toParent: nil)
+      if let currentDisplayed = self.currentDisplayController {
+        currentDisplayed.willMove(toParent: nil)
+        currentDisplayed.view.removeFromSuperview()
+        if let scrollView = self.scrollViewInViewController(vc: currentDisplayed) {
+          self.updateTopInset(for: scrollView, with: -self.originalTopInset)
+        }
+        currentDisplayed.removeFromParent()
+        currentDisplayed.didMove(toParent: nil)
+      }
       self.currentDisplayController = selectedViewController
 
       self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
