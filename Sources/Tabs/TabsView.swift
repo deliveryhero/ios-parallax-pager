@@ -12,20 +12,11 @@ import UIKit
 fileprivate class TabView: UIView {
   let index: Int
   let button: UIButton
-  let title: String
-  let defaultColor: UIColor
-  let selectedColor: UIColor
-  let defaultFont: UIFont
-  let selectedFont: UIFont
   unowned let tabsView: TabsView
 
   init(
-    title: String,
+    title: TabTitle,
     index: Int,
-    defaultColor: UIColor,
-    selectedColor: UIColor,
-    defaultFont: UIFont,
-    selectedFont: UIFont,
     horizontalInsets: CGFloat,
     height: CGFloat,
     tabsView: TabsView
@@ -33,37 +24,21 @@ fileprivate class TabView: UIView {
     self.index = index
     self.button = UIButton(type: .custom)
     self.tabsView = tabsView
-    button.setTitle(title, for: .normal)
-    button.titleLabel?.font = selectedFont // -> to always fit selected
+    button.setAttributedTitle(title.normal, for: .normal)
+    button.setAttributedTitle(title.selected, for: .selected)
+    button.isSelected = true // -> to always fit selected
     button.contentEdgeInsets = UIEdgeInsets(top: 0, left: horizontalInsets, bottom: 0, right: horizontalInsets)
     button.sizeToFit()
-    button.setTitleColor(defaultColor, for: .normal)
-    button.titleLabel?.font = defaultFont
-
-    self.defaultColor = defaultColor
-    self.selectedColor = selectedColor
-    self.defaultFont = defaultFont
-    self.selectedFont = selectedFont
-
-    self.title = title
     let buttonFrame = button.frame
+    button.isSelected = false
     let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
     addSubview(button)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-    button.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
-    button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-    button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
   }
 
   func setSelected(selected: Bool) {
     button.isSelected = selected
-    let titleColor = selected ? selectedColor : defaultColor
-    button.setTitleColor(titleColor, for: .normal)
-    let titleFont = selected ? selectedFont : defaultFont
-    button.titleLabel?.font = titleFont
   }
 
   override var frame: CGRect {
@@ -121,10 +96,6 @@ public class TabsView: UIView {
       let tab = TabView(
         title: title,
         index: index,
-        defaultColor: tabsConfig.defaultTabTitleColor,
-        selectedColor: tabsConfig.selectedTabTitleColor,
-        defaultFont: tabsConfig.defaultTabTitleFont,
-        selectedFont: tabsConfig.selectedTabTitleFont,
         horizontalInsets: tabsConfig.horizontalTabTitleInsets,
         height: self.frame.size.height,
         tabsView: self
@@ -151,16 +122,17 @@ public class TabsView: UIView {
       if tabsConfig.fullWidth {
         let diff = frame.size.width - scrollView.contentSize.width
         let valueToBeAdded = diff / CGFloat(integerLiteral: tabsList.count)
-        var newXOrigin: CGFloat = 0
+        var xOrigin: CGFloat = 0
         for tab in tabsList {
           var tempFrame = tab.frame
           tempFrame.size.width += valueToBeAdded
-          tempFrame.origin.x = newXOrigin
+          tempFrame.origin.x = xOrigin
           tab.frame = tempFrame
-          newXOrigin += tempFrame.size.width
+          xOrigin += tempFrame.size.width
         }
+        scrollView.contentSize = CGSize(width: xOrigin, height: 0)
       } else if tabsConfig.tabsShouldBeCentered == true {
-        scrollViewWidthConstraint.isActive = false
+        scrollViewWidthConstraint?.isActive = false
         scrollView.addConstraint(
           NSLayoutConstraint(
             item: scrollView,
