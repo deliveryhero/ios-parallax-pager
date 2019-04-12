@@ -14,6 +14,7 @@ public struct TabsConfig {
   public let height: CGFloat
   public let tabsPadding: CGFloat
   public let tabsShouldBeCentered: Bool
+  public let fullWidth: Bool
   public let defaultTabTitleColor: UIColor
   public let selectedTabTitleColor: UIColor
   public let defaultTabTitleFont: UIFont
@@ -27,6 +28,7 @@ public struct TabsConfig {
     height: CGFloat,
     tabsPadding: CGFloat,
     tabsShouldBeCentered: Bool,
+    fullWidth: Bool,
     defaultTabTitleColor: UIColor,
     selectedTabTitleColor: UIColor,
     defaultTabTitleFont: UIFont,
@@ -39,6 +41,7 @@ public struct TabsConfig {
     self.height = height
     self.tabsPadding = tabsPadding
     self.tabsShouldBeCentered = tabsShouldBeCentered
+    self.fullWidth = fullWidth
     self.defaultTabTitleColor = defaultTabTitleColor
     self.selectedTabTitleColor = selectedTabTitleColor
     self.defaultTabTitleFont = defaultTabTitleFont

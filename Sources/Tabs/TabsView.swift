@@ -51,6 +51,11 @@ fileprivate class TabView: UIView {
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
     addSubview(button)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+    button.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+    button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+    button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
   }
 
   func setSelected(selected: Bool) {
@@ -109,7 +114,8 @@ public class TabsView: UIView {
 
   private func createTabs() {
 
-    var xOrigin: CGFloat = tabsConfig.tabsPadding
+    let padding = tabsConfig.fullWidth ? 0 : tabsConfig.tabsPadding
+    var xOrigin: CGFloat = padding
 
     for (index, title) in tabsConfig.titles.enumerated() {
       let tab = TabView(
@@ -130,7 +136,7 @@ public class TabsView: UIView {
         width: tab.frame.size.width,
         height: tab.frame.size.height
       )
-      xOrigin += tab.frame.size.width + tabsConfig.tabsPadding
+      xOrigin += tab.frame.size.width + padding
       scrollView.addSubview(tab)
       tabsList.append(tab)
 
@@ -138,25 +144,36 @@ public class TabsView: UIView {
     }
 
     scrollView.contentSize = CGSize(width: xOrigin, height: 0)
-
-    if xOrigin < scrollView.frame.size.width && tabsConfig.tabsShouldBeCentered == true {
-      scrollViewWidthConstraint.isActive = false
-      scrollView.addConstraint(
-        NSLayoutConstraint(
-          item: scrollView,
-          attribute: .width,
-          relatedBy: .equal,
-          toItem: nil,
-          attribute: .notAnAttribute,
-          multiplier: 1.0,
-          constant: xOrigin
-        )
-      )
-      layoutSubviews()
-    }
   }
 
   override public func layoutSubviews() {
+    if scrollView.contentSize.width < frame.size.width {
+      if tabsConfig.fullWidth {
+        let diff = frame.size.width - scrollView.contentSize.width
+        let valueToBeAdded = diff / CGFloat(integerLiteral: tabsList.count)
+        var newXOrigin: CGFloat = 0
+        for tab in tabsList {
+          var tempFrame = tab.frame
+          tempFrame.size.width += valueToBeAdded
+          tempFrame.origin.x = newXOrigin
+          tab.frame = tempFrame
+          newXOrigin += tempFrame.size.width
+        }
+      } else if tabsConfig.tabsShouldBeCentered == true {
+        scrollViewWidthConstraint.isActive = false
+        scrollView.addConstraint(
+          NSLayoutConstraint(
+            item: scrollView,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .notAnAttribute,
+            multiplier: 1.0,
+            constant: scrollView.contentSize.width
+          )
+        )
+      }
+    }
     updateSelectionIndicator()
   }
 
