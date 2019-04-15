@@ -151,6 +151,7 @@ public class TabsView: UIView {
 
   fileprivate func updateSelectionIndicator() {
 
+    guard tabsList.isEmpty == false else { return }
     let selectedTabFrame = tabsList[selectedIndex].frame
     let frame = CGRect(
       x: selectedTabFrame.origin.x,
