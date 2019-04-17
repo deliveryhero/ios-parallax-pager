@@ -12,20 +12,11 @@ import UIKit
 fileprivate class TabView: UIView {
   let index: Int
   let button: UIButton
-  let title: String
-  let defaultColor: UIColor
-  let selectedColor: UIColor
-  let defaultFont: UIFont
-  let selectedFont: UIFont
   unowned let tabsView: TabsView
 
   init(
-    title: String,
+    title: TabTitle,
     index: Int,
-    defaultColor: UIColor,
-    selectedColor: UIColor,
-    defaultFont: UIFont,
-    selectedFont: UIFont,
     horizontalInsets: CGFloat,
     height: CGFloat,
     tabsView: TabsView
@@ -33,20 +24,13 @@ fileprivate class TabView: UIView {
     self.index = index
     self.button = UIButton(type: .custom)
     self.tabsView = tabsView
-    button.setTitle(title, for: .normal)
-    button.titleLabel?.font = selectedFont // -> to always fit selected
+    button.setAttributedTitle(title.normal, for: .normal)
+    button.setAttributedTitle(title.selected, for: .selected)
+    button.isSelected = true // -> to always fit selected
     button.contentEdgeInsets = UIEdgeInsets(top: 0, left: horizontalInsets, bottom: 0, right: horizontalInsets)
     button.sizeToFit()
-    button.setTitleColor(defaultColor, for: .normal)
-    button.titleLabel?.font = defaultFont
-
-    self.defaultColor = defaultColor
-    self.selectedColor = selectedColor
-    self.defaultFont = defaultFont
-    self.selectedFont = selectedFont
-
-    self.title = title
     let buttonFrame = button.frame
+    button.isSelected = false
     let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
@@ -55,10 +39,6 @@ fileprivate class TabView: UIView {
 
   func setSelected(selected: Bool) {
     button.isSelected = selected
-    let titleColor = selected ? selectedColor : defaultColor
-    button.setTitleColor(titleColor, for: .normal)
-    let titleFont = selected ? selectedFont : defaultFont
-    button.titleLabel?.font = titleFont
   }
 
   override var frame: CGRect {
@@ -109,16 +89,13 @@ public class TabsView: UIView {
 
   private func createTabs() {
 
-    var xOrigin: CGFloat = tabsConfig.tabsPadding
+    let padding = tabsConfig.fullWidth ? 0 : tabsConfig.tabsPadding
+    var xOrigin: CGFloat = padding
 
     for (index, title) in tabsConfig.titles.enumerated() {
       let tab = TabView(
         title: title,
         index: index,
-        defaultColor: tabsConfig.defaultTabTitleColor,
-        selectedColor: tabsConfig.selectedTabTitleColor,
-        defaultFont: tabsConfig.defaultTabTitleFont,
-        selectedFont: tabsConfig.selectedTabTitleFont,
         horizontalInsets: tabsConfig.horizontalTabTitleInsets,
         height: self.frame.size.height,
         tabsView: self
@@ -130,7 +107,7 @@ public class TabsView: UIView {
         width: tab.frame.size.width,
         height: tab.frame.size.height
       )
-      xOrigin += tab.frame.size.width + tabsConfig.tabsPadding
+      xOrigin += tab.frame.size.width + padding
       scrollView.addSubview(tab)
       tabsList.append(tab)
 
@@ -138,30 +115,43 @@ public class TabsView: UIView {
     }
 
     scrollView.contentSize = CGSize(width: xOrigin, height: 0)
-
-    if xOrigin < scrollView.frame.size.width && tabsConfig.tabsShouldBeCentered == true {
-      scrollViewWidthConstraint.isActive = false
-      scrollView.addConstraint(
-        NSLayoutConstraint(
-          item: scrollView,
-          attribute: .width,
-          relatedBy: .equal,
-          toItem: nil,
-          attribute: .notAnAttribute,
-          multiplier: 1.0,
-          constant: xOrigin
-        )
-      )
-      layoutSubviews()
-    }
   }
 
   override public func layoutSubviews() {
+    if scrollView.contentSize.width < frame.size.width {
+      if tabsConfig.fullWidth {
+        let diff = frame.size.width - scrollView.contentSize.width
+        let valueToBeAdded = diff / CGFloat(integerLiteral: tabsList.count)
+        var xOrigin: CGFloat = 0
+        for tab in tabsList {
+          var tempFrame = tab.frame
+          tempFrame.size.width += valueToBeAdded
+          tempFrame.origin.x = xOrigin
+          tab.frame = tempFrame
+          xOrigin += tempFrame.size.width
+        }
+        scrollView.contentSize = CGSize(width: xOrigin, height: 0)
+      } else if tabsConfig.tabsShouldBeCentered == true {
+        scrollViewWidthConstraint?.isActive = false
+        scrollView.addConstraint(
+          NSLayoutConstraint(
+            item: scrollView,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .notAnAttribute,
+            multiplier: 1.0,
+            constant: scrollView.contentSize.width
+          )
+        )
+      }
+    }
     updateSelectionIndicator()
   }
 
   fileprivate func updateSelectionIndicator() {
 
+    guard tabsList.isEmpty == false else { return }
     let selectedTabFrame = tabsList[selectedIndex].frame
     let frame = CGRect(
       x: selectedTabFrame.origin.x,

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E225CF41225F70DD0069789F /* PagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E225CF3B225E27340069789F /* PagerViewController.swift */; };
 		E23C7FC3215D39C3005F2545 /* TabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23C7FC0215D39C3005F2545 /* TabsView.swift */; };
 		E23C7FC4215D39C3005F2545 /* TabsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E23C7FC1215D39C3005F2545 /* TabsView.xib */; };
 		E23C7FCC215D3A96005F2545 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23C7FCB215D3A96005F2545 /* AppDelegate.swift */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		52D6D97C1BEFF229002C0205 /* ParallaxPagerView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ParallaxPagerView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD2FAA261CD0B6D800659CF4 /* ParallaxPagerView.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ParallaxPagerView.plist; sourceTree = "<group>"; };
+		E225CF3B225E27340069789F /* PagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewController.swift; sourceTree = "<group>"; };
 		E23C7FC0215D39C3005F2545 /* TabsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsView.swift; sourceTree = "<group>"; };
 		E23C7FC1215D39C3005F2545 /* TabsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabsView.xib; sourceTree = "<group>"; };
 		E23C7FC9215D3A96005F2545 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +110,7 @@
 			children = (
 				AD2FAA261CD0B6D800659CF4 /* ParallaxPagerView.plist */,
 				E23C7FE9215D41D9005F2545 /* ParallaxPagerView.swift */,
+				E225CF3B225E27340069789F /* PagerViewController.swift */,
 				E2E306F8216BF0200025897F /* Protocols.swift */,
 				E2E306F6216BB0780025897F /* TabsConfig.swift */,
 				E23C7FBF215D39C3005F2545 /* Tabs */,
@@ -259,6 +262,7 @@
 				E2E306F7216BB0780025897F /* TabsConfig.swift in Sources */,
 				E23C7FEA215D41D9005F2545 /* ParallaxPagerView.swift in Sources */,
 				E2E306F9216BF0200025897F /* Protocols.swift in Sources */,
+				E225CF41225F70DD0069789F /* PagerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

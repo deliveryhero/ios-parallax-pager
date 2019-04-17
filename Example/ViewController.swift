@@ -59,17 +59,28 @@ class ViewController: UIViewController {
     let viewController6 = storyboard.instantiateViewController(withIdentifier: "NoScrollVC") as! NoScrollViewController
 
     let viewControllers: [TabViewController] = [viewController1, viewController2, viewController3, viewController4, viewController5, viewController6]
-    let titles = ["View 1", "View 2", "View 3", "View 4", "View 5", "View 6"]
+    //let viewControllers: [TabViewController] = [viewController1, viewController2, viewController2]
+    let titles = ["View 1", "a longtitle to test with", "View 3", "View 4", "View 5", "View 6"]
+    //let titles = ["Longer name", "View 2", "View 3"]
+    var tabTitles = [TabTitle]()
+    for title in titles {
+      tabTitles.append(
+        TabTitle(
+          title: title,
+          normalColor: .black,
+          selectedColor: .black,
+          normalFont: UIFont.systemFont(ofSize: 15.0),
+          selectedFont: UIFont.boldSystemFont(ofSize: 15.0)
+        )
+      )
+    }
 
     let tabsConfig = TabsConfig(
-      titles: titles,
+      titles: tabTitles,
       height: 50.0,
       tabsPadding: 16.0,
       tabsShouldBeCentered: false,
-      defaultTabTitleColor: .black,
-      selectedTabTitleColor: .black,
-      defaultTabTitleFont: UIFont.systemFont(ofSize: 15.0),
-      selectedTabTitleFont: UIFont.boldSystemFont(ofSize: 15.0),
+      fullWidth: false,
       horizontalTabTitleInsets: 5.0,
       selectionIndicatorHeight: 2.0,
       selectionIndicatorColor: .blue

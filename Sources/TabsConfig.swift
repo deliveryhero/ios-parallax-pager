@@ -9,28 +9,51 @@
 import Foundation
 import UIKit
 
+public struct TabTitle {
+  let normal: NSAttributedString
+  let selected: NSAttributedString
+
+  public init(normal: NSAttributedString, selected: NSAttributedString) {
+    self.normal = normal
+    self.selected = selected
+  }
+
+  public init(
+    title: String,
+    normalColor: UIColor,
+    selectedColor: UIColor,
+    normalFont: UIFont,
+    selectedFont: UIFont
+  ) {
+    let normalAttribute: [NSAttributedString.Key : Any] = [
+      .font: normalFont,
+      .foregroundColor: normalColor
+    ]
+    let selectedAttribute: [NSAttributedString.Key : Any] = [
+      .font: selectedFont,
+      .foregroundColor: selectedColor
+    ]
+    self.normal = NSAttributedString(string: title, attributes: normalAttribute)
+    self.selected = NSAttributedString(string: title, attributes: selectedAttribute)
+  }
+}
+
 public struct TabsConfig {
-  public let titles: [String]
+  public let titles: [TabTitle]
   public let height: CGFloat
   public let tabsPadding: CGFloat
   public let tabsShouldBeCentered: Bool
-  public let defaultTabTitleColor: UIColor
-  public let selectedTabTitleColor: UIColor
-  public let defaultTabTitleFont: UIFont
-  public let selectedTabTitleFont: UIFont
+  public let fullWidth: Bool
   public let horizontalTabTitleInsets: CGFloat
   public let selectionIndicatorHeight: CGFloat
   public let selectionIndicatorColor: UIColor
 
   public init(
-    titles: [String],
+    titles: [TabTitle],
     height: CGFloat,
     tabsPadding: CGFloat,
     tabsShouldBeCentered: Bool,
-    defaultTabTitleColor: UIColor,
-    selectedTabTitleColor: UIColor,
-    defaultTabTitleFont: UIFont,
-    selectedTabTitleFont: UIFont,
+    fullWidth: Bool,
     horizontalTabTitleInsets: CGFloat,
     selectionIndicatorHeight: CGFloat,
     selectionIndicatorColor: UIColor
@@ -39,10 +62,7 @@ public struct TabsConfig {
     self.height = height
     self.tabsPadding = tabsPadding
     self.tabsShouldBeCentered = tabsShouldBeCentered
-    self.defaultTabTitleColor = defaultTabTitleColor
-    self.selectedTabTitleColor = selectedTabTitleColor
-    self.defaultTabTitleFont = defaultTabTitleFont
-    self.selectedTabTitleFont = selectedTabTitleFont
+    self.fullWidth = fullWidth
     self.horizontalTabTitleInsets = horizontalTabTitleInsets
     self.selectionIndicatorHeight = selectionIndicatorHeight
     self.selectionIndicatorColor = selectionIndicatorColor
