@@ -117,15 +117,30 @@ public class TabsView: UIView {
     scrollView.contentSize = CGSize(width: xOrigin, height: 0)
   }
 
+  private func couldHaveEqualTabsWidth() -> Bool {
+    let maxWidth = frame.size.width / CGFloat(tabsList.count)
+    for tab in tabsList {
+      if tab.frame.size.width > maxWidth {
+        return false
+      }
+    }
+    return true
+  }
+
   override public func layoutSubviews() {
     if scrollView.contentSize.width < frame.size.width {
       if tabsConfig.fullWidth {
         let diff = frame.size.width - scrollView.contentSize.width
         let valueToBeAdded = diff / CGFloat(integerLiteral: tabsList.count)
+        let couldUseEqualWidth = couldHaveEqualTabsWidth()
         var xOrigin: CGFloat = 0
         for tab in tabsList {
           var tempFrame = tab.frame
-          tempFrame.size.width += valueToBeAdded
+          if couldUseEqualWidth {
+            tempFrame.size.width = frame.size.width / CGFloat(tabsList.count)
+          } else {
+            tempFrame.size.width += valueToBeAdded
+          }
           tempFrame.origin.x = xOrigin
           tab.frame = tempFrame
           xOrigin += tempFrame.size.width
