@@ -624,11 +624,15 @@ public final class ParallaxPagerView: UIView {
   private func didSelectTabAtIndex(index: Int, previouslySelected: Int, animated: Bool, completion: (() -> Void)? = nil) {
     guard index >= 0, index < viewControllers.count else {
       print("ERROR: Invalid Selection Index.")
+      self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
       return
     }
 
     let selectedViewController = viewControllers[index]
-    if currentDisplayController != nil && selectedViewController == currentDisplayController! { return }
+    if currentDisplayController != nil && selectedViewController == currentDisplayController! {
+      self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
+      return
+    }
 
     invalidateObservations()
 
