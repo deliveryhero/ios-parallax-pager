@@ -50,7 +50,7 @@ fileprivate class TabView: UIView {
   }
 
   @objc private func tabClicked() {
-    tabsView.clickedTab(at: index)
+    tabsView.clickedTab(at: index, origin: .click)
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -58,9 +58,14 @@ fileprivate class TabView: UIView {
   }
 }
 
+public enum TabChangeOrigin {
+  case click
+  case other
+}
+
 public class TabsView: UIView {
 
-  public var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void = { _, _ in }
+  public var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int, _ origin: TabChangeOrigin) -> Void = { _, _,_  in }
 
   @IBOutlet fileprivate weak var scrollView: UIScrollView!
   @IBOutlet fileprivate weak var scrollViewWidthConstraint: NSLayoutConstraint!
@@ -179,9 +184,9 @@ public class TabsView: UIView {
     }
   }
 
-  fileprivate func clickedTab(at index: Int) {
+  fileprivate func clickedTab(at index: Int, origin: TabChangeOrigin) {
     if index == selectedIndex { return }
-    onSelectedTabChanging(index, selectedIndex)
+    onSelectedTabChanging(index, selectedIndex, origin)
     selectedIndex = index
     let selectedTab = tabsList[index]
 
@@ -196,9 +201,9 @@ public class TabsView: UIView {
     }
   }
 
-  func setSelected(index: Int) {
+  func setSelected(index: Int, origin: TabChangeOrigin) {
     guard index >= 0, index < tabsList.count else { return }
-    clickedTab(at: index)
+    clickedTab(at: index, origin: origin)
   }
 }
 
@@ -213,7 +218,7 @@ extension TabsView: PagerTab {
   }
 
   public func setSelectedTab(at index: Int) {
-    setSelected(index: index)
+    setSelected(index: index, origin: .other)
   }
 }
 

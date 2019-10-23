@@ -24,7 +24,7 @@ public protocol PagerDelegate {
 }
 
 public protocol PagerTab {
-  var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int) -> Void { set get }
+  var onSelectedTabChanging: (_ oldTab: Int, _ newTab: Int, _ origin: TabChangeOrigin) -> Void { set get }
   func currentSelectedIndex() -> Int
   func numberOfTabs() -> Int
   func setSelectedTab(at index: Int)
