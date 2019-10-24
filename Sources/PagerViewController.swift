@@ -144,7 +144,7 @@ public final class PagerView: UIView {
 
     // Setup TabsView.
     if tabsView != nil {
-      tabsView!.onSelectedTabChanging = { [weak self] newIndex, oldIndex in
+      tabsView!.onSelectedTabChanging = { [weak self] newIndex, oldIndex, _ in
         self?.didSelectTabAtIndex(index: newIndex, previouslySelected: oldIndex, animated: true)
       }
       addSubview(tabsView!)

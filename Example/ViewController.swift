@@ -140,8 +140,8 @@ class ContainerView: UIView, PagerTab {
   init(frame: CGRect, tabsView: TabsView) {
     tabsView.frame = CGRect(x: 0, y: 0, width: frame.width, height: tabsView.frame.height)
     self.tabsView = tabsView
-    self.onSelectedTabChanging = { oldTab, newTab in
-      tabsView.onSelectedTabChanging(oldTab, newTab)
+    self.onSelectedTabChanging = { oldTab, newTab, origin in
+      tabsView.onSelectedTabChanging(oldTab, newTab, origin)
     }
     super.init(frame: frame)
     addSubview(tabsView)
@@ -163,7 +163,7 @@ class ContainerView: UIView, PagerTab {
     self.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: tabsView.frame.height + 50)
   }
 
-  var onSelectedTabChanging: (Int, Int) -> Void = { _, _ in } {
+  var onSelectedTabChanging: (Int, Int, TabChangeOrigin) -> Void = { _, _, _ in } {
     didSet {
       tabsView.onSelectedTabChanging = onSelectedTabChanging
     }
