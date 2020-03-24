@@ -70,7 +70,8 @@ class ViewController: UIViewController {
           normalColor: .black,
           selectedColor: .black,
           normalFont: UIFont.systemFont(ofSize: 15.0),
-          selectedFont: UIFont.boldSystemFont(ofSize: 15.0)
+          selectedFont: UIFont.boldSystemFont(ofSize: 15.0),
+          accessibilityID: "accessibilityID"
         )
       )
     }
@@ -83,7 +84,8 @@ class ViewController: UIViewController {
       fullWidth: false,
       horizontalTabTitleInsets: 5.0,
       selectionIndicatorHeight: 2.0,
-      selectionIndicatorColor: .blue
+      selectionIndicatorColor: .blue,
+      accessibilityID: "test"
     )
 
     let imgView = UIImageView(image: UIImage(named: "photo.jpg"));
