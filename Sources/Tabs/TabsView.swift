@@ -19,7 +19,8 @@ fileprivate class TabView: UIView {
     index: Int,
     horizontalInsets: CGFloat,
     height: CGFloat,
-    tabsView: TabsView
+    tabsView: TabsView,
+    accessibilityID: String
   ) {
     self.index = index
     self.button = UIButton(type: .custom)
@@ -35,6 +36,7 @@ fileprivate class TabView: UIView {
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
     addSubview(button)
+    self.accessibilityIdentifier = accessibilityID
   }
 
   func setSelected(selected: Bool) {
@@ -103,7 +105,8 @@ public class TabsView: UIView {
         index: index,
         horizontalInsets: tabsConfig.horizontalTabTitleInsets,
         height: self.frame.size.height,
-        tabsView: self
+        tabsView: self,
+        accessibilityID: tabsConfig.accessibilityID
       )
 
       tab.frame = CGRect(

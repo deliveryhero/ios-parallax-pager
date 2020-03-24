@@ -47,6 +47,7 @@ public struct TabsConfig {
   public let horizontalTabTitleInsets: CGFloat
   public let selectionIndicatorHeight: CGFloat
   public let selectionIndicatorColor: UIColor
+  public let accessibilityID: String
 
   public init(
     titles: [TabTitle],
@@ -56,7 +57,8 @@ public struct TabsConfig {
     fullWidth: Bool,
     horizontalTabTitleInsets: CGFloat,
     selectionIndicatorHeight: CGFloat,
-    selectionIndicatorColor: UIColor
+    selectionIndicatorColor: UIColor,
+    accessibilityID: String
     ) {
     self.titles = titles
     self.height = height
@@ -66,6 +68,7 @@ public struct TabsConfig {
     self.horizontalTabTitleInsets = horizontalTabTitleInsets
     self.selectionIndicatorHeight = selectionIndicatorHeight
     self.selectionIndicatorColor = selectionIndicatorColor
+    self.accessibilityID = accessibilityID
   }
 }
 
