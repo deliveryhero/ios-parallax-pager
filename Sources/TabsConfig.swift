@@ -12,10 +12,12 @@ import UIKit
 public struct TabTitle {
   let normal: NSAttributedString
   let selected: NSAttributedString
+  let accessibilityID: String
 
-  public init(normal: NSAttributedString, selected: NSAttributedString) {
+  public init(normal: NSAttributedString, selected: NSAttributedString, accessibilityID: String) {
     self.normal = normal
     self.selected = selected
+    self.accessibilityID = accessibilityID
   }
 
   public init(
@@ -23,7 +25,8 @@ public struct TabTitle {
     normalColor: UIColor,
     selectedColor: UIColor,
     normalFont: UIFont,
-    selectedFont: UIFont
+    selectedFont: UIFont,
+    accessibilityID: String
   ) {
     let normalAttribute: [NSAttributedString.Key : Any] = [
       .font: normalFont,
@@ -35,6 +38,7 @@ public struct TabTitle {
     ]
     self.normal = NSAttributedString(string: title, attributes: normalAttribute)
     self.selected = NSAttributedString(string: title, attributes: selectedAttribute)
+    self.accessibilityID = accessibilityID
   }
 }
 

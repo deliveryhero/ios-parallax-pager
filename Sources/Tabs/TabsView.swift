@@ -19,8 +19,7 @@ fileprivate class TabView: UIView {
     index: Int,
     horizontalInsets: CGFloat,
     height: CGFloat,
-    tabsView: TabsView,
-    accessibilityID: String
+    tabsView: TabsView
   ) {
     self.index = index
     self.button = UIButton(type: .custom)
@@ -35,8 +34,8 @@ fileprivate class TabView: UIView {
     let frame = CGRect(x: 0, y: 0, width: buttonFrame.size.width, height: height)
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
+    button.accessibilityIdentifier = title.accessibilityID
     addSubview(button)
-    self.accessibilityIdentifier = accessibilityID
   }
 
   func setSelected(selected: Bool) {
@@ -95,7 +94,6 @@ public class TabsView: UIView {
   }
 
   private func createTabs() {
-
     let padding = tabsConfig.fullWidth ? 0 : tabsConfig.tabsPadding
     var xOrigin: CGFloat = padding
 
@@ -105,8 +103,7 @@ public class TabsView: UIView {
         index: index,
         horizontalInsets: tabsConfig.horizontalTabTitleInsets,
         height: self.frame.size.height,
-        tabsView: self,
-        accessibilityID: tabsConfig.accessibilityID
+        tabsView: self
       )
 
       tab.frame = CGRect(
@@ -118,6 +115,7 @@ public class TabsView: UIView {
       xOrigin += tab.frame.size.width + padding
       scrollView.addSubview(tab)
       tabsList.append(tab)
+      scrollView.accessibilityIdentifier = tabsConfig.accessibilityID
 
       if index == 0 { tab.setSelected(selected: true) }
     }
