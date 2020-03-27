@@ -70,8 +70,7 @@ class ViewController: UIViewController {
           normalColor: .black,
           selectedColor: .black,
           normalFont: UIFont.systemFont(ofSize: 15.0),
-          selectedFont: UIFont.boldSystemFont(ofSize: 15.0),
-          accessibilityID: "accessibilityID"
+          selectedFont: UIFont.boldSystemFont(ofSize: 15.0)
         )
       )
     }

@@ -14,7 +14,7 @@ public struct TabTitle {
   let selected: NSAttributedString
   let accessibilityID: String
 
-  public init(normal: NSAttributedString, selected: NSAttributedString, accessibilityID: String) {
+  public init(normal: NSAttributedString, selected: NSAttributedString, accessibilityID: String = "") {
     self.normal = normal
     self.selected = selected
     self.accessibilityID = accessibilityID
@@ -26,7 +26,7 @@ public struct TabTitle {
     selectedColor: UIColor,
     normalFont: UIFont,
     selectedFont: UIFont,
-    accessibilityID: String
+    accessibilityID: String = ""
   ) {
     let normalAttribute: [NSAttributedString.Key : Any] = [
       .font: normalFont,
@@ -62,7 +62,7 @@ public struct TabsConfig {
     horizontalTabTitleInsets: CGFloat,
     selectionIndicatorHeight: CGFloat,
     selectionIndicatorColor: UIColor,
-    accessibilityID: String
+    accessibilityID: String = ""
     ) {
     self.titles = titles
     self.height = height
