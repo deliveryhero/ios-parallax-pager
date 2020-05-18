@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 
 public final class PagerView: UIView {
-
   private var tabsHeight: CGFloat = 0
   public private(set) var tabsView: (UIView & PagerTab)?
 
@@ -43,7 +42,7 @@ public final class PagerView: UIView {
 
   public init(
     containerViewController: UIViewController,
-    tabsView: (PagerTab & UIView),
+    tabsView: PagerTab & UIView,
     viewControllers: [UIViewController],
     pagerDelegate: PagerDelegate?
   ) {
@@ -79,11 +78,11 @@ public final class PagerView: UIView {
 
   public func setupPager(
     with viewControllers: [UIViewController],
-    tabsView: (PagerTab & UIView),
+    tabsView: PagerTab & UIView,
     pagerDelegate: PagerDelegate? = nil,
     animated: Bool,
     completion: (() -> Void)? = nil
-    ) {
+  ) {
     self.pagerDelegate = pagerDelegate
     self.tabsView = tabsView
     tabsHeight = tabsView.frame.size.height
@@ -92,7 +91,7 @@ public final class PagerView: UIView {
     currentDisplayController?.view.alpha = 0.0
     self.tabsView?.alpha = 0.0
     didSelectTabAtIndex(index: 0, previouslySelected: -1, animated: false, completion: completion)
-    let duration = animated ? 0.3 : 0.0;
+    let duration = animated ? 0.3 : 0.0
     UIView.animate(withDuration: duration) {
       self.currentDisplayController?.view.alpha = 1.0
       self.tabsView?.alpha = 1.0
@@ -105,7 +104,7 @@ public final class PagerView: UIView {
     pagerDelegate: PagerDelegate? = nil,
     animated: Bool,
     completion: (() -> Void)? = nil
-    ) {
+  ) {
     setupPager(
       with: viewControllers,
       tabsView: TabsView.tabsView(with: tabsViewConfig),
@@ -139,9 +138,7 @@ public final class PagerView: UIView {
     currentDisplayController = firstVC
   }
 
-
   private func initialLayoutTabsView() {
-
     // Setup TabsView.
     if tabsView != nil {
       tabsView!.onSelectedTabChanging = { [weak self] newIndex, oldIndex, _ in
@@ -201,7 +198,7 @@ public final class PagerView: UIView {
   }
 
   private func getPositionConstraints(for view: UIView) -> [NSLayoutConstraint]? {
-    return self.constraints.filter { (constraint) -> Bool in
+    return constraints.filter { (constraint) -> Bool in
       guard
         let firstItem = constraint.firstItem as? NSObject,
         let secondItem = constraint.secondItem as? NSObject
@@ -218,7 +215,6 @@ public final class PagerView: UIView {
   }
 
   private func layoutChildViewController(vc: UIViewController, position: CGFloat) {
-
     guard let view = vc.view else { return }
     view.preservesSuperviewLayoutMargins = true
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -258,7 +254,8 @@ public final class PagerView: UIView {
         toItem: self,
         attribute: .width,
         multiplier: 1.0,
-        constant: 0.0)
+        constant: 0.0
+      )
     )
 
     if let tabsView = self.tabsView {
@@ -310,15 +307,22 @@ public final class PagerView: UIView {
     }
   }
 
-  private func didSelectTabAtIndex(index: Int, previouslySelected: Int, animated: Bool, completion: (() -> Void)? = nil) {
+  private func didSelectTabAtIndex(
+    index: Int,
+    previouslySelected: Int,
+    animated: Bool,
+    completion: (() -> Void)? = nil
+  ) {
     guard index >= 0, index < viewControllers.count else {
       print("ERROR: Invalid Selection Index.")
       return
     }
 
+    pagerDelegate?.willSelectTab(at: index, previouslySelected: previouslySelected)
+
     let selectedViewController = viewControllers[index]
-    if currentDisplayController != nil && selectedViewController == currentDisplayController! {
-      self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
+    if currentDisplayController != nil, selectedViewController == currentDisplayController! {
+      pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
       return
     }
 
@@ -362,7 +366,7 @@ public final class PagerView: UIView {
     let indexToBe = (gesture.direction == .left) ? index + 1 : index - 1
     guard
       let numberOfTabs = tabsView?.numberOfTabs(),
-      indexToBe >= 0 && indexToBe < numberOfTabs
+      indexToBe >= 0, indexToBe < numberOfTabs
       else { return }
 
     tabsView?.setSelectedTab(at: indexToBe)
