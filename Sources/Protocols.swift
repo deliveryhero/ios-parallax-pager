@@ -20,6 +20,7 @@ public protocol ParallaxViewDelegate {
 }
 
 public protocol PagerDelegate {
+  func willSelectTab(at index: Int, previouslySelected: Int)
   func didSelectTab(at index: Int, previouslySelected: Int)
 }
 

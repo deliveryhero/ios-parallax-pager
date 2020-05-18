@@ -318,9 +318,11 @@ public final class PagerView: UIView {
 
     let selectedViewController = viewControllers[index]
     if currentDisplayController != nil && selectedViewController == currentDisplayController! {
-      self.pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
+      pagerDelegate?.didSelectTab(at: index, previouslySelected: previouslySelected)
       return
     }
+
+    pagerDelegate?.willSelectTab(at: index, previouslySelected: previouslySelected)
 
     let shouldAnimateLeft = index > previouslySelected
     let newViewInitialPosition = shouldAnimateLeft ? bounds.size.width : -bounds.size.width
