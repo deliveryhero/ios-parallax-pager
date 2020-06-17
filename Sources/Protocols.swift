@@ -15,7 +15,7 @@ public protocol ParallaxContentViewController {
   func scrollableView() -> UIScrollView?
 }
 
-public protocol ParallaxViewDelegate {
+public protocol ParallaxViewDelegate: class {
   func parallaxViewDidScrollBy(percentage: CGFloat, oldOffset: CGPoint, newOffset: CGPoint)
 }
 

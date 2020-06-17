@@ -28,13 +28,13 @@ public final class ParallaxPagerView: UIView {
 
   private let scaleHeaderOnBounce: Bool
 
-  private var parallaxDelegate: ParallaxViewDelegate?
+  private weak var parallaxDelegate: ParallaxViewDelegate?
   private var pagerDelegate: PagerDelegate?
 
   private var contentOffsetObservation: NSKeyValueObservation?
   private var contentInsetObservation: NSKeyValueObservation?
 
-  private let containerViewController: UIViewController
+  private unowned let containerViewController: UIViewController
 
   private var headerHeightConstraint: NSLayoutConstraint?
   private var contentViewLeadingConstraint: NSLayoutConstraint?
