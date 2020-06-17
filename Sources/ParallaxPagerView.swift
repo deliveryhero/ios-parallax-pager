@@ -28,13 +28,13 @@ public final class ParallaxPagerView: UIView {
 
   private let scaleHeaderOnBounce: Bool
 
-  private var parallaxDelegate: ParallaxViewDelegate?
+  private weak var parallaxDelegate: ParallaxViewDelegate?
   private var pagerDelegate: PagerDelegate?
 
   private var contentOffsetObservation: NSKeyValueObservation?
   private var contentInsetObservation: NSKeyValueObservation?
 
-  private let containerViewController: UIViewController
+  private weak var containerViewController: UIViewController?
 
   private var headerHeightConstraint: NSLayoutConstraint?
   private var contentViewLeadingConstraint: NSLayoutConstraint?
@@ -224,8 +224,8 @@ public final class ParallaxPagerView: UIView {
 
     layoutInternalScrollView()
 
-    containerViewController.automaticallyAdjustsScrollViewInsets = false
-    containerViewController.extendedLayoutIncludesOpaqueBars = false
+    containerViewController?.automaticallyAdjustsScrollViewInsets = false
+    containerViewController?.extendedLayoutIncludesOpaqueBars = false
     preservesSuperviewLayoutMargins = true
 
     headerView.clipsToBounds = true
@@ -505,7 +505,7 @@ public final class ParallaxPagerView: UIView {
 
     vc.willMove(toParent: containerViewController)
     internalScrollView.insertSubview(vc.view, at: 0)
-    containerViewController.addChild(vc)
+    containerViewController?.addChild(vc)
     vc.didMove(toParent: containerViewController)
 
     contentViewTrailingConstraint = NSLayoutConstraint(
