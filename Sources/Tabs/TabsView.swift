@@ -35,6 +35,7 @@ fileprivate class TabView: UIView {
     super.init(frame: frame)
     button.addTarget(self, action: #selector(tabClicked), for: .touchUpInside)
     button.accessibilityIdentifier = title.accessibilityID
+    button.isAccessibilityElement = true
     addSubview(button)
   }
 
