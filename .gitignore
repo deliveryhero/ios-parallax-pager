@@ -6,6 +6,15 @@
 build/
 DerivedData/
 
+# Swift Package Manager
+#
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+# Package.pins
+# Package.resolved
+.build/
+.swiftpm/xcode/xcuserdata
+
 ## Various settings
 *.pbxuser
 !default.pbxuser
