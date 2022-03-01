@@ -1,0 +1,21 @@
+name: Building the Swift Package
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Building the Swift Package
+    runs-on: macOS-11
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_12.5.1.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: 1
+
+    steps:
+     - uses: actions/checkout@v2
+     - uses: webfactory/ssh-agent@v0.4.1
+       with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+     - name: swift build
+       run: swift build -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "x86_64-apple-ios14.0-simulator"
