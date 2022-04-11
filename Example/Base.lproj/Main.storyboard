@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -86,7 +86,7 @@
         <!--Demo Table View Controller-->
         <scene sceneID="vtF-VQ-jXB">
             <objects>
-                <tableViewController storyboardIdentifier="DemoTableView" id="fHX-Cg-0BJ" customClass="DemoTableViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DemoTableView" id="fHX-Cg-0BJ" customClass="DemoTableViewController" customModule="Example" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="chZ-eO-oMT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -191,7 +191,7 @@
         <!--No Scroll View Controller-->
         <scene sceneID="WnZ-pT-80e">
             <objects>
-                <viewController storyboardIdentifier="NoScrollVC" id="04b-jt-mhW" customClass="NoScrollViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NoScrollVC" id="04b-jt-mhW" customClass="NoScrollViewController" customModule="Example" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TbT-hI-COI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
