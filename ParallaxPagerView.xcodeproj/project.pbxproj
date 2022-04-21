@@ -22,6 +22,7 @@
 		E23C7FE2215D3C33005F2545 /* ParallaxPagerView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* ParallaxPagerView.framework */; };
 		E23C7FE3215D3C33005F2545 /* ParallaxPagerView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* ParallaxPagerView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E23C7FE8215D3E0B005F2545 /* photo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E23C7FE7215D3E0B005F2545 /* photo.jpg */; };
+		E6C4894D281198210098DBE5 /* Bundle+module.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C4894C281198210098DBE5 /* Bundle+module.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		E23C7FD7215D3A96005F2545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E23C7FDB215D3B0B005F2545 /* DemoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTableViewController.swift; sourceTree = "<group>"; };
 		E23C7FE7215D3E0B005F2545 /* photo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = photo.jpg; sourceTree = "<group>"; };
+		E6C4894C281198210098DBE5 /* Bundle+module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+module.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				B0B7E83A2772203F009E3000 /* Tabs */,
+				E6C4894B281198010098DBE5 /* Extensions */,
 				B0B7E83D2772203F009E3000 /* ParallaxPagerView.swift */,
 				B0B7E83E2772203F009E3000 /* TabsConfig.swift */,
 				B0B7E83F2772203F009E3000 /* Protocols.swift */,
@@ -141,6 +144,14 @@
 				E23C7FD7215D3A96005F2545 /* Info.plist */,
 			);
 			path = Example;
+			sourceTree = "<group>";
+		};
+		E6C4894B281198010098DBE5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E6C4894C281198210098DBE5 /* Bundle+module.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0B7E8422772203F009E3000 /* TabsView.swift in Sources */,
+				E6C4894D281198210098DBE5 /* Bundle+module.swift in Sources */,
 				B0B7E8452772203F009E3000 /* TabsConfig.swift in Sources */,
 				B0B7E8442772203F009E3000 /* ParallaxPagerView.swift in Sources */,
 				B0B7E8462772203F009E3000 /* Protocols.swift in Sources */,

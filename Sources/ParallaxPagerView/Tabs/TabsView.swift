@@ -80,8 +80,8 @@ public class TabsView: UIView {
 
   public static func tabsView(with config: TabsConfig) -> TabsView {
 
-    let bundle = Bundle(identifier: "com.ParallaxPagerView.ParallaxPagerView-iOS")
-    let tabsView = bundle!.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
+    let bundle = Bundle._module
+    let tabsView = bundle.loadNibNamed("TabsView", owner: nil, options: nil)?.first as! TabsView
     tabsView.tabsConfig = config
     tabsView.frame = CGRect(x: 0, y: 0, width: tabsView.frame.size.width, height: config.height)
     tabsView.createTabs()
