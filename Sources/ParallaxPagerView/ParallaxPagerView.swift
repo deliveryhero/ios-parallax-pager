@@ -44,6 +44,7 @@ public final class ParallaxPagerView: UIView {
     private var rightSwipeGestureRecognizer: UISwipeGestureRecognizer?
 
     private var internalScrollView: UIScrollView
+    private let shouldReceiveHeaderGestures: Bool
 
     public init(
         containerViewController: UIViewController,
@@ -52,7 +53,8 @@ public final class ParallaxPagerView: UIView {
         minimumHeaderHeight: CGFloat,
         scaleHeaderOnBounce: Bool,
         contentViewController: TabViewController,
-        parallaxDelegate: ParallaxViewDelegate?
+        parallaxDelegate: ParallaxViewDelegate?,
+        shouldReceiveHeaderGestures: Bool = true
     ) {
         self.containerViewController = containerViewController
         self.headerView = headerView
@@ -62,6 +64,7 @@ public final class ParallaxPagerView: UIView {
         viewControllers = [contentViewController]
         self.parallaxDelegate = parallaxDelegate
         internalScrollView = UIScrollView(frame: containerViewController.view.bounds)
+        self.shouldReceiveHeaderGestures = shouldReceiveHeaderGestures
         super.init(frame: containerViewController.view.bounds)
 
         baseConfig()
@@ -78,7 +81,8 @@ public final class ParallaxPagerView: UIView {
         tabsView: PagerTab & UIView,
         viewControllers: [TabViewController],
         pagerDelegate: PagerDelegate?,
-        parallaxDelegate: ParallaxViewDelegate?
+        parallaxDelegate: ParallaxViewDelegate?,
+        shouldReceiveHeaderGestures: Bool = true
     ) {
         self.containerViewController = containerViewController
         self.headerView = headerView
@@ -91,6 +95,7 @@ public final class ParallaxPagerView: UIView {
         self.parallaxDelegate = parallaxDelegate
         self.pagerDelegate = pagerDelegate
         internalScrollView = UIScrollView(frame: containerViewController.view.bounds)
+        self.shouldReceiveHeaderGestures = shouldReceiveHeaderGestures
         super.init(frame: containerViewController.view.bounds)
 
         baseConfig()
@@ -562,7 +567,9 @@ public final class ParallaxPagerView: UIView {
             hasShownController.add(vc)
             scrollView.contentOffset = CGPoint(x: 0, y: -headerHeight - tabsHeight)
             // set gestures priority.
-            if let rightGesture = rightSwipeGestureRecognizer, let leftGesture = leftSwipeGestureRecognizer {
+            if let rightGesture = rightSwipeGestureRecognizer,
+                let leftGesture = leftSwipeGestureRecognizer,
+               shouldReceiveHeaderGestures {
                 scrollView.gestureRecognizers?.forEach {
                     $0.require(toFail: rightGesture)
                     $0.require(toFail: leftGesture)
@@ -699,6 +706,7 @@ public final class ParallaxPagerView: UIView {
             action: #selector(swipeDetected(gesture:))
         )
         rightSwipeGestureRecognizer!.direction = .right
+        rightSwipeGestureRecognizer?.delegate = self
         addGestureRecognizer(rightSwipeGestureRecognizer!)
 
         leftSwipeGestureRecognizer = UISwipeGestureRecognizer(
@@ -706,10 +714,20 @@ public final class ParallaxPagerView: UIView {
             action: #selector(swipeDetected(gesture:))
         )
         leftSwipeGestureRecognizer!.direction = .left
+        leftSwipeGestureRecognizer?.delegate = self
         addGestureRecognizer(leftSwipeGestureRecognizer!)
     }
 
     deinit {
         invalidateObservations()
+    }
+}
+extension ParallaxPagerView: UIGestureRecognizerDelegate {
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+      if !shouldReceiveHeaderGestures {
+          let location = gestureRecognizer.location(in: self)
+          return !headerView.frame.contains(location)
+      }
+      return super.gestureRecognizerShouldBegin(gestureRecognizer)
     }
 }
