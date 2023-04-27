@@ -1,0 +1,19 @@
+site_name: Pandora iOS Consumer Tech Docs
+repo_name: deliveryhero/ios-parallax-pager
+repo_url: https://github.com/deliveryhero/ios-parallax-pager
+edit_uri: blob/master/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.sections
+
+markdown_extensions:
+- pymdownx.snippets:
+    check_paths: true
+
+plugins:
+  - techdocs-core
+  - awesome-pages
+  - git-revision-date-localized

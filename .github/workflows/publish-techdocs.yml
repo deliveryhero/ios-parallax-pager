@@ -1,0 +1,31 @@
+name: Publish TechDocs Site
+
+  # -----------------------------------------------------------------------------
+  #                           DevPortal -- TechDocs
+  #    https://dev.deliveryhero.net/docs/deliveryhero-pandora/component/pandora-mob-b2c-ios
+  # -----------------------------------------------------------------------------
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - .github/workflows/publish-techdocs.yml
+  pull_request_target:
+    branches:
+      - master  
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - .github/workflows/publish-techdocs.yml
+  workflow_dispatch:
+
+jobs:
+  publish-techdocs-site:
+    uses: deliveryhero/devportal-actions/.github/workflows/publish-techdocs-common.yml@main
+    with:
+      entity_kind: component
+      entity_name: ${{ github.event.repository.name }}
+      dry_run: ${{ github.base_ref != github.event.repository.default_branch }}
+    secrets: inherit
