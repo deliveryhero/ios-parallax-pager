@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ParallaxPagerView",
-    platforms: [.iOS(.v9)],
+    platforms: [.iOS(.v13)],
     products: [
         .library(
             name: "ParallaxPagerView",
